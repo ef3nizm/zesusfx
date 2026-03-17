@@ -1,0 +1,142 @@
+:root {
+    --bg: #0a0a0f;
+    --surface: #14141f;
+    --border: rgba(255,255,255,0.08);
+    --primary: #6366f1;
+    --accent: #ec4899;
+    --text: #f1f5f9;
+    --text-dim: #94a3b8;
+    --radius: 16px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Background */
+.bg-effects { position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+.orb { position:absolute; border-radius:50%; filter:blur(100px); opacity:0.3; }
+.orb1 { width:500px; height:500px; background:var(--primary); top:-150px; left:10%; animation:drift 12s ease-in-out infinite alternate; }
+.orb2 { width:400px; height:400px; background:var(--accent); bottom:-100px; right:5%; animation:drift 15s ease-in-out infinite alternate-reverse; }
+@keyframes drift { from{transform:translate(0,0)} to{transform:translate(30px,20px)} }
+
+/* Steps */
+.step { display:none; min-height:100vh; align-items:center; justify-content:center; }
+.step.active { display:flex; }
+.container { width:100%; max-width:700px; margin:0 auto; padding:2rem; text-align:center; }
+
+/* Typography */
+h1 { font-size:clamp(2rem,5vw,3.5rem); font-weight:800; letter-spacing:-0.03em; margin-bottom:1rem; line-height:1.2; }
+h2 { font-size:1.8rem; font-weight:700; margin-bottom:1.5rem; }
+.gradient-text { background:linear-gradient(135deg,#a855f7,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.subtitle { color:var(--text-dim); font-size:1.1rem; margin-bottom:3rem; line-height:1.6; }
+
+/* Upload Box */
+.upload-box {
+    background: var(--surface);
+    border: 2px dashed rgba(99,102,241,0.4);
+    border-radius: var(--radius);
+    padding: 3.5rem 2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.upload-box:hover { border-color:var(--primary); background:rgba(99,102,241,0.05); }
+.upload-box.dragover { border-color:var(--primary); background:rgba(99,102,241,0.1); transform:scale(1.02); }
+.upload-icon { color:var(--primary); margin-bottom:1.5rem; }
+.upload-title { font-size:1.2rem; font-weight:600; margin-bottom:0.5rem; }
+.upload-sub { color:var(--text-dim); font-size:0.9rem; margin-bottom:1.5rem; }
+.btn-upload {
+    background: linear-gradient(135deg,var(--primary),var(--accent));
+    color: white; border:none; padding:0.85rem 2.5rem;
+    border-radius:10px; font-size:1rem; font-weight:600;
+    cursor:pointer; font-family:inherit;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+}
+.btn-upload:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(99,102,241,0.5); }
+
+/* Processing */
+.processing-file { color:var(--text-dim); font-size:1rem; margin-bottom:2rem; }
+.progress-container { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+.progress-bar { flex:1; height:10px; background:rgba(255,255,255,0.1); border-radius:5px; overflow:hidden; }
+.progress-fill { height:100%; width:0%; background:linear-gradient(to right,var(--primary),var(--accent)); border-radius:5px; transition:width 0.3s; }
+.progress-percent { font-weight:600; font-size:0.95rem; min-width:40px; }
+.processing-status { color:var(--text-dim); font-size:0.95rem; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* Results */
+.result-tracks { display:flex; flex-direction:column; gap:1.5rem; margin-bottom:2rem; }
+.track-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: left;
+}
+.track-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; }
+.track-icon { font-size:1.5rem; }
+.track-label { font-weight:600; font-size:1.1rem; }
+
+.track-card audio {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    outline: none;
+}
+
+.btn-download {
+    display: inline-block;
+    background: linear-gradient(135deg,var(--primary),var(--accent));
+    color: white; text-decoration:none;
+    padding: 0.65rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+.btn-download:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(99,102,241,0.4); }
+
+.btn-new {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 0.75rem 2rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s;
+}
+.btn-new:hover { color:var(--text); border-color:rgba(255,255,255,0.3); }
+
+/* Navigation */
+.top-nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:1rem 2rem;
+    background:rgba(10,10,15,0.8);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+}
+.nav-logo { color:var(--text); text-decoration:none; font-weight:700; font-size:1.15rem; }
+.nav-links { display:flex; gap:1.5rem; }
+.nav-links a {
+    color:var(--text-dim); text-decoration:none; font-weight:500; font-size:0.95rem;
+    padding:0.4rem 0.8rem; border-radius:8px; transition:all 0.2s;
+}
+.nav-links a:hover { color:var(--text); }
+.nav-links a.active { color:var(--text); background:rgba(99,102,241,0.2); }
+
+.step { padding-top:70px; }
+
+/* MIDI page */
+.midi-info { color:var(--text-dim); margin-bottom:1.25rem; line-height:1.6; }

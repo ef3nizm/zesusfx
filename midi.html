@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZESU AI - MIDI Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700;900&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --z-purple: #a78bfa;
+            --z-bg: #030014;
+            --z-card: rgba(15, 12, 41, 0.8);
+            --z-accent: #c084fc;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--z-bg);
+            color: #ede9fe;
+            overflow-x: hidden;
+            margin: 0;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(88, 28, 135, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(45, 10, 80, 0.15) 0%, transparent 40%);
+        }
+
+        #star-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+        }
+
+        .glass-card {
+            background: var(--z-card);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(167, 139, 250, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, var(--z-purple), #f472b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
+            text-decoration: none;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .sidebar-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--z-card);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(167, 139, 250, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(167, 139, 250, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .sidebar-text {
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            color: var(--z-purple);
+            opacity: 0;
+            transform: translateX(15px);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            white-space: nowrap;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        .sidebar-link:hover .sidebar-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .sidebar-link:hover .sidebar-icon {
+            color: white;
+            border-color: var(--z-purple);
+            background: rgba(167, 139, 250, 0.15);
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+        }
+
+        .sidebar-link:hover .sidebar-icon::after {
+            transform: translateX(100%);
+        }
+
+        .sidebar-link.active .sidebar-icon {
+            background: var(--z-purple);
+            color: white;
+            border-color: var(--z-purple);
+            box-shadow: 0 0 40px rgba(167, 139, 250, 0.4);
+            transform: scale(1.05);
+        }
+
+        #global-loader {
+            position: fixed;
+            inset: 0;
+            background: #030014;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+
+        .p-ring {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="star-canvas"></canvas>
+
+    <div id="global-loader">
+        <div class="flex flex-col items-center">
+            <div class="w-16 h-16 border-t-4 border-purple-500 border-solid rounded-full animate-spin"></div>
+            <h1 style="font-family: 'Syncopate';" class="mt-6 text-2xl font-bold tracking-[0.5em] text-purple-400">ZESU AI</h1>
+        </div>
+    </div>
+
+    <div class="fixed top-8 left-8 z-[100] flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-700 flex items-center justify-center shadow-2xl shadow-purple-500/30">
+            <i class="fas fa-microchip text-white text-xl"></i>
+        </div>
+        <div>
+            <span class="text-2xl font-black tracking-tighter block leading-none">ZESU STUDIO</span>
+            <span class="text-[9px] font-bold text-purple-400/60 uppercase tracking-[0.4em]">Audio Intelligence</span>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <a href="/" class="sidebar-link">
+            <span class="sidebar-text">VOCAL REMOVER</span>
+            <div class="sidebar-icon">
+                <i class="fas fa-microphone-lines"></i>
+            </div>
+        </a>
+        <a href="/midi.html" class="sidebar-link active">
+            <span class="sidebar-text">MIDI ENGINE</span>
+            <div class="sidebar-icon">
+                <i class="fas fa-keyboard"></i>
+            </div>
+        </a>
+        <a href="/youtube.html" class="sidebar-link">
+            <span class="sidebar-text">YT DOWNLOADER</span>
+            <div class="sidebar-icon">
+                <i class="fab fa-youtube"></i>
+            </div>
+        </a>
+    </aside>
+
+    <main class="max-w-4xl mx-auto px-6 py-20">
+        <div class="glass-card rounded-[2.5rem] p-12 text-center relative overflow-hidden">
+            <!-- Upload Section -->
+            <div id="upload-zone">
+                <div class="mb-10 inline-flex p-5 rounded-[2rem] bg-purple-500/5 border border-purple-500/10 p-ring">
+                    <i class="fas fa-keyboard text-5xl text-purple-400"></i>
+                </div>
+                <h1 class="text-4xl lg:text-5xl font-black uppercase tracking-[0.1em] mb-4">MP3 to <span class="gradient-text">MIDI</span></h1>
+                <p class="text-xs opacity-40 uppercase tracking-[0.3em] font-medium mb-12">AI engine captures and generates notes locally</p>
+
+                <div onclick="document.getElementById('audio-input').click()" 
+                     class="border-2 border-dashed border-purple-500/20 rounded-[2rem] p-16 group hover:bg-purple-500/5 hover:border-purple-500/40 cursor-pointer transition-all">
+                    <p class="text-sm font-bold opacity-60 group-hover:opacity-100 transition-opacity uppercase tracking-widest">Upload audio file or drag & drop here</p>
+                    <input type="file" id="audio-input" class="hidden" accept="audio/*">
+                </div>
+            </div>
+
+            <!-- Processing Section -->
+            <div id="processing-ui" class="hidden py-10 space-y-10">
+                <div>
+                    <h3 id="status-text" class="text-xl font-black text-purple-400 uppercase tracking-[0.4em] mb-4">LOADING MODEL</h3>
+                    <div id="loading-spinner" class="w-12 h-12 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mx-auto mb-6"></div>
+                    <p id="sub-status" class="text-[10px] opacity-40 uppercase tracking-widest">Magenta AI Engine is starting...</p>
+                </div>
+                
+                <div class="h-2 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/10 max-w-sm mx-auto">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-indigo-500 w-0 rounded-full transition-all duration-300"></div>
+                </div>
+                <span id="percent-text" class="text-3xl font-black italic text-purple-500">0%</span>
+            </div>
+
+            <!-- Result Section -->
+            <div id="results-midi" class="hidden py-10 space-y-8 animate-in fade-in zoom-in duration-500">
+                <div class="w-24 h-24 bg-green-500/10 rounded-[2rem] flex items-center justify-center mx-auto border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+                    <i class="fas fa-check text-green-500 text-4xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-black uppercase tracking-[0.1em] mb-2">MIDI CREATED</h3>
+                    <p class="text-xs opacity-50 uppercase tracking-widest">Note extraction and conversion completed successfully.</p>
+                </div>
+                <button onclick="downloadMIDI()" class="w-full max-w-sm py-5 bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl font-black text-sm uppercase tracking-[0.4em] shadow-2xl hover:scale-[1.02] transition-all">SAVE FILE (.MID)</button>
+                <div class="pt-4">
+                    <button onclick="location.reload()" class="text-[10px] font-bold opacity-30 hover:opacity-100 uppercase tracking-widest transition-opacity">← Convert New File</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log Box -->
+        <div class="mt-8 glass-card rounded-2xl p-6">
+            <div class="flex items-center gap-2 mb-4">
+                <div class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div>
+                <h4 class="text-[10px] font-bold opacity-50 uppercase tracking-widest">Process Console</h4>
+            </div>
+            <div id="log-box" class="h-24 overflow-y-auto text-[10px] font-mono text-purple-200/40 space-y-1">
+                <p>> Zesu MIDI Engine on standby...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let magentaModel = null;
+        let midiBlob = null;
+        let activeFile = null;
+
+        function addLog(m, type = '') {
+            const b = document.getElementById('log-box');
+            const p = document.createElement('p');
+            p.innerHTML = `<span class="opacity-30">[${new Date().toLocaleTimeString()}]</span> > ${m}`;
+            if (type === 'success') p.className = 'text-green-400 font-bold';
+            b.prepend(p);
+        }
+
+        document.getElementById('audio-input').onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            activeFile = file;
+            
+            document.getElementById('upload-zone').classList.add('hidden');
+            document.getElementById('processing-ui').classList.remove('hidden');
+            
+            processMidi(file);
+        };
+
+        async function processMidi(file) {
+            try {
+                addLog("Loading Magenta AI modules...");
+                if (!magentaModel) {
+                    magentaModel = new mm.OnsetsAndFrames('https://storage.googleapis.com/magentadata/js/checkpoints/transcription/onsets_frames_uni');
+                    await magentaModel.initialize();
+                }
+                
+                addLog("Analyzing audio data...");
+                updateUI(30, "ANALYZING AUDIO", "Scanning frequencies...");
+                
+                const ac = new (window.AudioContext || window.webkitAudioContext)();
+                const ab = await ac.decodeAudioData(await file.arrayBuffer());
+                
+                addLog("AI is extracting notes (this depends on processor speed)...");
+                updateUI(60, "EXTRACTING NOTES", "Matching AI notes...");
+                
+                const ns = await magentaModel.transcribeFromAudioBuffer(ab);
+                midiBlob = new Blob([mm.sequenceProtoToMidi(ns)], { type: 'audio/midi' });
+                
+                addLog("Conversion completed!", "success");
+                updateUI(100, "COMPLETED", "File is ready.");
+                
+                setTimeout(() => {
+                    document.getElementById('processing-ui').classList.add('hidden');
+                    document.getElementById('results-midi').classList.remove('hidden');
+                }, 800);
+
+            } catch (e) { 
+                addLog("ERROR: " + e.message); 
+                document.getElementById('status-text').textContent = "ERROR OCCURRED";
+                document.getElementById('status-text').classList.replace('text-purple-400', 'text-red-500');
+                document.getElementById('sub-status').textContent = e.message;
+            }
+        }
+
+        function updateUI(p, status, sub) {
+            document.getElementById('progress-bar').style.width = p + '%';
+            document.getElementById('percent-text').textContent = p + '%';
+            document.getElementById('status-text').textContent = status;
+            document.getElementById('sub-status').textContent = sub;
+        }
+
+        function downloadMIDI() {
+            if (!midiBlob) return;
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(midiBlob);
+            const fileName = activeFile ? activeFile.name.split('.')[0] : 'zesu_midi';
+            a.download = `${fileName}.mid`;
+            a.click();
+        }
+
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function initStars() {
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight;
+            stars = Array.from({ length: 100 }, () => ({ 
+                x: Math.random() * canvas.width, 
+                y: Math.random() * canvas.height, 
+                s: Math.random() * 2, 
+                v: Math.random() * 0.5 
+            }));
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(167,139,250,0.3)";
+            stars.forEach(s => {
+                ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI * 2); ctx.fill();
+                s.y -= s.v; if (s.y < 0) s.y = canvas.height;
+            });
+            requestAnimationFrame(drawStars);
+        }
+
+        window.onload = () => {
+            initStars(); 
+            drawStars();
+            setTimeout(() => { 
+                document.getElementById('global-loader').style.opacity = '0'; 
+                setTimeout(() => document.getElementById('global-loader').style.display = 'none', 600); 
+            }, 800);
+        };
+        window.onresize = initStars;
+    </script>
+</body>
+</html>
