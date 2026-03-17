@@ -181,7 +181,10 @@ async def download_youtube(data: dict):
             "download_url": f"/api/download/yt/{folder_name}/{final_name}"
         }
     except Exception as e:
-        return JSONResponse(status_code=500, content={"error": "Server error during extraction. Please check the URL."})
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Error during YT download: {error_details}")
+        return JSONResponse(status_code=500, content={"error": f"Extraction failed: {str(e)}"})
 
 @app.get("/api/download/yt/{folder}/{filename}")
 async def download_yt_file(folder: str, filename: str):
@@ -211,3 +214,4 @@ app.mount("/", StaticFiles(directory=str(BASE_DIR)), name="static")
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
