@@ -361,7 +361,7 @@
                             <button class="play-btn" onclick="togglePlay(this, 'portfolio_tracks/sıkıcı müzik vol2.mp3')">
                                 <i class="fas fa-play"></i>
                             </button>
-                            <div class="flex-1">
+                            <div class="flex-1 text-left">
                                 <h3 class="font-bold text-lg uppercase tracking-wider mb-1">Game Music</h3>
                                 <div class="mt-4 flex items-center gap-4">
                                     <span class="text-[10px] opacity-40 font-mono currentTime">0:00</span>
@@ -530,11 +530,9 @@
             const timeDisplay = card.querySelector('.currentTime');
             const durationDisplay = card.querySelector('.duration');
 
-            const trackSrc = src;
-
-            if (currentAudio && currentAudio.src.includes(encodeURI(src))) {
+            if (currentAudio && currentAudio.getAttribute('data-src') === src) {
                 if (currentAudio.paused) {
-                    currentAudio.play();
+                    currentAudio.play().catch(e => console.error("Play error:", e));
                     icon.className = 'fas fa-pause';
                 } else {
                     currentAudio.pause();
@@ -546,17 +544,27 @@
                     if (currentBtn) currentBtn.querySelector('i').className = 'fas fa-play';
                 }
 
-                currentAudio = new Audio(trackSrc);
-                // Apply the saved volume for this specific track, default to 1 if not set
+                console.log("Loading path:", src);
+                // Use encodeURI to handle special characters like 'ı', 'ü', 'ö' etc.
+                currentAudio = new Audio(encodeURI(src));
+                currentAudio.setAttribute('data-src', src);
+                
                 currentAudio.volume = trackVolumes[src] !== undefined ? trackVolumes[src] : 1;
                 currentBtn = btn;
-                currentAudio.play();
+                
+                currentAudio.play().catch(e => {
+                    console.error("Audio Load/Play error:", e);
+                    alert("Ses dosyası bulunamadı veya yüklenemedi: " + src);
+                });
+                
                 icon.className = 'fas fa-pause';
 
                 currentAudio.ontimeupdate = () => {
-                    const p = (currentAudio.currentTime / currentAudio.duration) * 100;
-                    progressBar.style.width = p + '%';
-                    timeDisplay.textContent = formatTime(currentAudio.currentTime);
+                    if (currentAudio.duration) {
+                        const p = (currentAudio.currentTime / currentAudio.duration) * 100;
+                        progressBar.style.width = p + '%';
+                        timeDisplay.textContent = formatTime(currentAudio.currentTime);
+                    }
                 };
 
                 currentAudio.onloadedmetadata = () => {
@@ -571,13 +579,14 @@
         }
 
         function formatTime(s) {
+            if (isNaN(s)) return "0:00";
             const min = Math.floor(s / 60);
             const sec = Math.floor(s % 60);
             return `${min}:${sec.toString().padStart(2, '0')}`;
         }
 
         function seek(e, el) {
-            if (!currentAudio) return;
+            if (!currentAudio || !currentAudio.duration) return;
             const rect = el.getBoundingClientRect();
             const pos = (e.clientX - rect.left) / rect.width;
             currentAudio.currentTime = pos * currentAudio.duration;
