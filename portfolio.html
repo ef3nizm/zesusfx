@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZESU AI - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700;900&family=Syncopate:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --z-purple: #a78bfa;
+            --z-bg: #030014;
+            --z-card: rgba(15, 12, 41, 0.8);
+            --z-accent: #c084fc;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--z-bg);
+            color: #ede9fe;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(88, 28, 135, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(45, 10, 80, 0.15) 0%, transparent 40%);
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        #star-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+        }
+
+        .glass-card {
+            background: var(--z-card);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(167, 139, 250, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, var(--z-purple), #f472b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
+            text-decoration: none;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .sidebar-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--z-card);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(167, 139, 250, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(167, 139, 250, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .sidebar-text {
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            color: var(--z-purple);
+            opacity: 0;
+            transform: translateX(15px);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            white-space: nowrap;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        .sidebar-link:hover .sidebar-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .sidebar-link:hover .sidebar-icon {
+            color: white;
+            border-color: var(--z-purple);
+            background: rgba(167, 139, 250, 0.15);
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+        }
+
+        .sidebar-link:hover .sidebar-icon::after {
+            transform: translateX(100%);
+        }
+
+        .sidebar-link.active .sidebar-icon {
+            background: var(--z-purple);
+            color: white;
+            border-color: var(--z-purple);
+            box-shadow: 0 0 40px rgba(167, 139, 250, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Audio Player Styles */
+        .track-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .track-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(167, 139, 250, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .play-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--z-purple);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+        }
+
+        .progress-container {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--z-purple);
+            border-radius: 2px;
+            width: 0%;
+        }
+
+        /* Scrollable Container */
+        .tracks-shelf {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            /* Important for flex child as scrollable */
+            padding-right: 12px;
+            margin: -12px;
+            padding: 12px;
+            mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }
+
+        .tracks-shelf::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .tracks-shelf::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+
+        .tracks-shelf::-webkit-scrollbar-thumb {
+            background: var(--z-purple);
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--z-purple);
+        }
+
+        .glow-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            filter: blur(80px);
+            animation: pulse-glow 10s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            from {
+                opacity: 0.3;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            to {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+
+        /* Platform Icons */
+        .platform-link {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .platform-link:hover {
+            background: var(--z-purple);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Volume Slider Custom Styles */
+        .volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--z-purple);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #global-loader {
+            position: fixed;
+            inset: 0;
+            background: #030014;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false;">
+    <canvas id="star-canvas"></canvas>
+    <div class="glow-overlay"></div>
+
+    <div id="global-loader">
+        <div class="flex flex-col items-center">
+            <div class="w-16 h-16 border-t-4 border-purple-500 border-solid rounded-full animate-spin"></div>
+            <h1 style="font-family: 'Syncopate';" class="mt-6 text-2xl font-bold tracking-[0.5em] text-purple-400">ZESU
+                AI</h1>
+        </div>
+    </div>
+
+    <div class="fixed top-8 left-8 z-[100] flex items-center gap-4">
+        <div
+            class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-700 flex items-center justify-center shadow-2xl shadow-purple-500/30">
+            <i class="fas fa-microchip text-white text-xl"></i>
+        </div>
+        <div>
+            <span class="text-2xl font-black tracking-tighter block leading-none">ZESU STUDIO</span>
+            <span class="text-[9px] font-bold text-purple-400/60 uppercase tracking-[0.4em]">Audio Intelligence</span>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <a href="/" class="sidebar-link">
+            <span class="sidebar-text">VOCAL REMOVER</span>
+            <div class="sidebar-icon">
+                <i class="fas fa-microphone-lines"></i>
+            </div>
+        </a>
+        <a href="/midi.html" class="sidebar-link">
+            <span class="sidebar-text">MIDI ENGINE</span>
+            <div class="sidebar-icon">
+                <i class="fas fa-keyboard"></i>
+            </div>
+        </a>
+        <a href="/youtube.html" class="sidebar-link">
+            <span class="sidebar-text">YT DOWNLOADER</span>
+            <div class="sidebar-icon">
+                <i class="fab fa-youtube"></i>
+            </div>
+        </a>
+        <a href="/portfolio.html" class="sidebar-link active">
+            <span class="sidebar-text">PORTFOLIO</span>
+            <div class="sidebar-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+        </a>
+    </aside>
+
+    <main class="max-w-4xl mx-auto px-6 h-screen flex flex-col py-12">
+        <header class="text-center mb-12 shrink-0">
+            <h1 class="text-5xl lg:text-7xl font-black uppercase tracking-[0.1em] mb-4">MY <span
+                    class="gradient-text">WORK</span></h1>
+            <p class="text-xs opacity-40 uppercase tracking-[0.4em] font-medium">SHOWCASING SONIC EXCELLENCE & AI
+                PRODUCTIONS</p>
+        </header>
+
+        <div class="tracks-shelf">
+            <section class="grid gap-6">
+                <!-- Track 1 -->
+                <div class="track-card">
+                    <div class="flex items-center gap-6">
+                        <button class="play-btn" onclick="togglePlay(this, 'portfolio_tracks/sıkıcı müzik vol2.mp3')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg uppercase tracking-wider mb-1">Game Music</h3>
+                            <div class="mt-4 flex items-center gap-4">
+                                <span class="text-[10px] opacity-40 font-mono currentTime">0:00</span>
+                                <div class="progress-container" onclick="seek(event, this)">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <span class="text-[10px] opacity-40 font-mono duration">0:00</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 ml-4">
+                            <i class="fas fa-volume-low text-[10px] opacity-40"></i>
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1"
+                                oninput="setVolume(this.value, 'portfolio_tracks/sıkıcı müzik vol2.mp3')">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Track 2 -->
+                <div class="track-card">
+                    <div class="flex items-center gap-6">
+                        <button class="play-btn"
+                            onclick="togglePlay(this, 'portfolio_tracks/similator background.mp3')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg uppercase tracking-wider mb-1">similator background</h3>
+                            <div class="mt-4 flex items-center gap-4">
+                                <span class="text-[10px] opacity-40 font-mono currentTime">0:00</span>
+                                <div class="progress-container" onclick="seek(event, this)">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <span class="text-[10px] opacity-40 font-mono duration">0:00</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 ml-4">
+                            <i class="fas fa-volume-low text-[10px] opacity-40"></i>
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1"
+                                oninput="setVolume(this.value, 'portfolio_tracks/similator background.mp3')">
+                        </div>
+                    </div>
+                </div>
+                <!-- track 3    -->
+                <div class="track-card">
+                    <div class="flex items-center gap-6">
+                        <button class="play-btn" onclick="togglePlay(this, 'portfolio_tracks/melodi.mp3')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg uppercase tracking-wider mb-1">melodi</h3>
+                            <div class="mt-4 flex items-center gap-4">
+                                <span class="text-[10px] opacity-40 font-mono currentTime">0:00</span>
+                                <div class="progress-container" onclick="seek(event, this)">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <span class="text-[10px] opacity-40 font-mono duration">0:00</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 ml-4">
+                            <i class="fas fa-volume-low text-[10px] opacity-40"></i>
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1"
+                                oninput="setVolume(this.value, 'portfolio_tracks/melodi.mp3')">
+                        </div>
+                    </div>
+                </div>
+                <div class="track-card">
+                    <div class="flex items-center gap-6">
+                        <button class="play-btn" onclick="togglePlay(this, 'portfolio_tracks/slow edition.mp3')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg uppercase tracking-wider mb-1">slow edition</h3>
+                            <div class="mt-4 flex items-center gap-4">
+                                <span class="text-[10px] opacity-40 font-mono currentTime">0:00</span>
+                                <div class="progress-container" onclick="seek(event, this)">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <span class="text-[10px] opacity-40 font-mono duration">0:00</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 ml-4">
+                            <i class="fas fa-volume-low text-[10px] opacity-40"></i>
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1"
+                                oninput="setVolume(this.value, 'portfolio_tracks/slow edition.mp3')">
+                        </div>
+                    </div>
+                </div>
+                <div class="track-card">
+                    <div class="flex items-center gap-6">
+                        <button class="play-btn" onclick="togglePlay(this, 'portfolio_tracks/feels.mp3')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg uppercase tracking-wider mb-1">feels</h3>
+                            <div class="mt-4 flex items-center gap-4">
+                                <span class="text-[10px] opacity-40 font-mono currentTime">0:00</span>
+                                <div class="progress-container" onclick="seek(event, this)">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <span class="text-[10px] opacity-40 font-mono duration">0:00</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 ml-4">
+                            <i class="fas fa-volume-low text-[10px] opacity-40"></i>
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1"
+                                oninput="setVolume(this.value, 'portfolio_tracks/feels.mp3')">
+                        </div>
+                    </div>
+                </div>
+                <div class="track-card">
+                    <div class="flex items-center gap-6">
+                        <button class="play-btn" onclick="togglePlay(this, 'portfolio_tracks/topclub.mp3')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg uppercase tracking-wider mb-1">topclub</h3>
+                            <div class="mt-4 flex items-center gap-4">
+                                <span class="text-[10px] opacity-40 font-mono currentTime">0:00</span>
+                                <div class="progress-container" onclick="seek(event, this)">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <span class="text-[10px] opacity-40 font-mono duration">0:00</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 ml-4">
+                            <i class="fas fa-volume-low text-[10px] opacity-40"></i>
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1"
+                                oninput="setVolume(this.value, 'portfolio_tracks/topclub.mp3')">
+                        </div>
+                    </div>
+            </section>
+        </div>
+
+        <section class="mt-12 text-center shrink-0">
+            <h2 class="text-xl font-black uppercase tracking-[0.3em] mb-10 opacity-60">Follow My Platforms</h2>
+            <div class="flex justify-center gap-8">
+                <a href="https://www.roblox.com/users/1140047458/profile" class="platform-link" title="Roblox">
+                    <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current" style="transform: rotate(-15deg);">
+                        <path fill-rule="evenodd" d="M0 0h24v24H0V0zm9 9h6v6H9V9z" />
+                    </svg>
+                </a>
+                <a href="https://discord.com/users/1107041038910103622" class="platform-link" title="Discord"><i
+                        class="fab fa-discord"></i></a>
+                <a href="https://soundcloud.com/zesudev" class="platform-link" title="SoundCloud"><i
+                        class="fab fa-soundcloud"></i></a>
+            </div>
+        </section>
+    </main>
+    <script>
+        let currentAudio = null;
+        let currentBtn = null;
+        let trackVolumes = {}; // Store volumes per track source
+
+        function setVolume(val, src) {
+            trackVolumes[src] = val;
+            // If the adjusted track is currently playing, update its volume instantly
+            if (currentAudio && currentAudio.src.includes(encodeURI(src))) {
+                currentAudio.volume = val;
+            }
+        }
+
+        function togglePlay(btn, src) {
+            const icon = btn.querySelector('i');
+            const card = btn.closest('.track-card');
+            const progressBar = card.querySelector('.progress-bar');
+            const timeDisplay = card.querySelector('.currentTime');
+            const durationDisplay = card.querySelector('.duration');
+
+            const trackSrc = src;
+
+            if (currentAudio && currentAudio.src.includes(encodeURI(src))) {
+                if (currentAudio.paused) {
+                    currentAudio.play();
+                    icon.className = 'fas fa-pause';
+                } else {
+                    currentAudio.pause();
+                    icon.className = 'fas fa-play';
+                }
+            } else {
+                if (currentAudio) {
+                    currentAudio.pause();
+                    if (currentBtn) currentBtn.querySelector('i').className = 'fas fa-play';
+                }
+
+                currentAudio = new Audio(trackSrc);
+                // Apply the saved volume for this specific track, default to 1 if not set
+                currentAudio.volume = trackVolumes[src] !== undefined ? trackVolumes[src] : 1;
+                currentBtn = btn;
+                currentAudio.play();
+                icon.className = 'fas fa-pause';
+
+                currentAudio.ontimeupdate = () => {
+                    const p = (currentAudio.currentTime / currentAudio.duration) * 100;
+                    progressBar.style.width = p + '%';
+                    timeDisplay.textContent = formatTime(currentAudio.currentTime);
+                };
+
+                currentAudio.onloadedmetadata = () => {
+                    durationDisplay.textContent = formatTime(currentAudio.duration);
+                };
+
+                currentAudio.onended = () => {
+                    icon.className = 'fas fa-play';
+                    progressBar.style.width = '0%';
+                };
+            }
+        }
+
+        function formatTime(s) {
+            const min = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return `${min}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function seek(e, el) {
+            if (!currentAudio) return;
+            const rect = el.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            currentAudio.currentTime = pos * currentAudio.duration;
+        }
+
+        // Prevent inspection and shortcuts
+        document.onkeydown = function (e) {
+            if (event.keyCode == 123) return false;
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        }
+
+        // Star Canvas
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function initStars() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars = Array.from({ length: 100 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                s: Math.random() * 2,
+                v: Math.random() * 0.5
+            }));
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(167,139,250,0.3)";
+            stars.forEach(s => {
+                ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI * 2); ctx.fill();
+                s.y -= s.v; if (s.y < 0) s.y = canvas.height;
+            }); requestAnimationFrame(drawStars);
+        } window.onload = () => {
+            initStars();
+            drawStars();
+            setTimeout(() => {
+                document.getElementById('global-loader').style.opacity = '0';
+                setTimeout(() => document.getElementById('global-loader').style.display = 'none', 600);
+            }, 800);
+        };
+        window.onresize = initStars;
+    </script>
+</body>
+
+</html>
