@@ -42,13 +42,25 @@
             transform: translateY(-2px);
         }
 
+        /* Navigasyon Sabitleme */
+        .sidebar-fixed {
+            position: fixed;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
         .sidebar-btn {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
+            border-radius: 15px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(167, 139, 250, 0.1);
             transition: all 0.3s ease;
@@ -59,7 +71,7 @@
         .sidebar-btn:hover {
             background: var(--z-purple);
             color: #000;
-            transform: translateX(5px);
+            transform: scale(1.1);
         }
 
         .sidebar-btn.active {
@@ -85,6 +97,9 @@
             align-items: center;
             transition: opacity 0.6s ease;
         }
+
+        /* Gizli dosya girişi */
+        #midi-upload { display: none; }
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -95,8 +110,8 @@
 
     <canvas id="star-canvas"></canvas>
 
-    <!-- Yan Menü Navigasyonu (Fixlendi) -->
-    <aside class="fixed left-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4">
+    <!-- Sabit Yan Menü -->
+    <aside class="sidebar-fixed">
         <a href="index.html" class="sidebar-btn" title="Ana Sayfa">
             <i class="fa-solid fa-house"></i>
         </a>
@@ -111,98 +126,126 @@
         </a>
     </aside>
 
-    <main class="min-h-screen flex flex-col items-center justify-center p-6 ml-12">
+    <main class="min-h-screen flex flex-col items-center justify-center p-6 pl-24">
         <div class="glass-card max-w-4xl w-full p-8 md:p-12">
             <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
                 <div class="text-center md:text-left">
                     <h1 class="text-4xl font-black uppercase tracking-tighter mb-2">MIDI <span class="text-purple-400">STUDIO</span></h1>
                     <p class="text-xs opacity-40 uppercase tracking-[0.3em] font-bold">Magenta AI Destekli Melodi Üretici</p>
                 </div>
-                <div class="flex gap-3">
-                    <button id="generate-btn" class="action-btn px-8 py-3 rounded-full font-bold uppercase tracking-widest text-xs">
-                        Melodi Üret
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button id="generate-btn" class="action-btn px-6 py-3 rounded-full font-bold uppercase tracking-widest text-[10px]">
+                        AI Melodi Üret
                     </button>
-                    <button id="download-btn" disabled class="action-btn px-8 py-3 rounded-full font-bold uppercase tracking-widest text-xs opacity-30 cursor-not-allowed">
-                        MIDI İndir
+                    <label for="midi-upload" class="action-btn px-6 py-3 rounded-full font-bold uppercase tracking-widest text-[10px] cursor-pointer">
+                        Dosya Ekle
+                    </label>
+                    <input type="file" id="midi-upload" accept=".mid,.midi">
+                    <button id="download-btn" disabled class="action-btn px-6 py-3 rounded-full font-bold uppercase tracking-widest text-[10px] opacity-30 cursor-not-allowed">
+                        İndir
                     </button>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
-                    <p class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">Tempo</p>
-                    <p class="text-2xl font-black">120 <span class="text-xs opacity-30">BPM</span></p>
+                    <p class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">Dosya</p>
+                    <p id="file-name-display" class="text-lg font-bold truncate">Yeni Melodi</p>
                 </div>
                 <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
                     <p class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">Durum</p>
-                    <p id="status" class="text-xl font-bold text-purple-400">Hazır</p>
+                    <p id="status" class="text-lg font-bold text-purple-400">Hazır</p>
                 </div>
                 <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
-                    <p class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">AI Model</p>
-                    <p class="text-xl font-bold">MusicRNN</p>
+                    <p class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">Tempo</p>
+                    <p class="text-lg font-bold">120 BPM</p>
                 </div>
             </div>
 
             <div id="visualizer" class="w-full h-48 bg-black/40 rounded-2xl border border-white/5 flex items-center justify-center relative overflow-hidden">
-                <p class="text-xs opacity-20 uppercase tracking-[0.5em] font-bold">Melodi Görselleştirici</p>
+                <p id="viz-placeholder" class="text-xs opacity-20 uppercase tracking-[0.5em] font-bold">Melodi Görselleştirici</p>
                 <div id="viz-bars" class="absolute inset-0 flex items-end justify-center gap-1 p-4"></div>
             </div>
         </div>
     </main>
 
     <script>
-        // Magenta.js Model Başlatma
+        // Magenta.js Yapılandırması
         const model = new mm.MusicRNN('https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn');
         let generatedSequence = null;
 
         const genBtn = document.getElementById('generate-btn');
         const dlBtn = document.getElementById('download-btn');
+        const uploadInput = document.getElementById('midi-upload');
         const status = document.getElementById('status');
         const vizBars = document.getElementById('viz-bars');
+        const vizPlaceholder = document.getElementById('viz-placeholder');
+        const fileNameDisplay = document.getElementById('file-name-display');
 
+        // AI Melodi Üretme
         async function generate() {
             try {
                 genBtn.disabled = true;
                 status.textContent = "Üretiliyor...";
+                vizPlaceholder.style.display = 'none';
                 
                 if (!model.isInitialized()) await model.initialize();
 
-                // Rastgele başlangıç notası
                 const seed = {
                     notes: [{ pitch: Math.floor(Math.random() * (72 - 60 + 1)) + 60, startTime: 0, endTime: 0.5 }],
                     totalTime: 0.5
                 };
 
-                // AI ile devam ettir
-                generatedSequence = await model.continueSequence(seed, 32, 1.0);
+                generatedSequence = await model.continueSequence(seed, 32, 1.1);
                 
                 dlBtn.disabled = false;
                 dlBtn.classList.remove('opacity-30', 'cursor-not-allowed');
                 status.textContent = "Tamamlandı";
+                fileNameDisplay.textContent = "AI_Generated.mid";
                 
                 visualize(generatedSequence.notes);
             } catch (e) {
-                status.textContent = "Hata Oluştu";
+                status.textContent = "Hata!";
                 console.error(e);
             } finally {
                 genBtn.disabled = false;
             }
         }
 
-        // Görselleştirme Fonksiyonu
+        // Dosya Yükleme Fonksiyonu
+        uploadInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            status.textContent = "Yükleniyor...";
+            fileNameDisplay.textContent = file.name;
+            vizPlaceholder.style.display = 'none';
+
+            try {
+                const blob = new Blob([file]);
+                generatedSequence = await mm.blobToNoteSequence(blob);
+                visualize(generatedSequence.notes);
+                status.textContent = "Dosya Hazır";
+                dlBtn.disabled = false;
+                dlBtn.classList.remove('opacity-30', 'cursor-not-allowed');
+            } catch (err) {
+                status.textContent = "Hatalı MIDI";
+                console.error(err);
+            }
+        });
+
         function visualize(notes) {
             vizBars.innerHTML = '';
             notes.forEach(n => {
                 const bar = document.createElement('div');
                 bar.className = 'bg-purple-500/40 w-full rounded-t-sm transition-all duration-500';
-                bar.style.height = `${(n.pitch - 40) * 2}%`;
+                bar.style.height = `${(n.pitch - 40) * 2.5}%`;
                 vizBars.appendChild(bar);
             });
         }
 
         genBtn.onclick = generate;
 
-        // MIDI İndirme Fonksiyonu
         dlBtn.onclick = () => {
             if (!generatedSequence) return;
             const midi = mm.sequenceProtoToMidi(generatedSequence);
@@ -210,11 +253,11 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'zesu_ai_melody.mid';
+            a.download = fileNameDisplay.textContent || 'zesu_melody.mid';
             a.click();
         };
 
-        // Arka Plan Yıldız Efekti
+        // Arka Plan Animasyonu
         const canvas = document.getElementById('star-canvas');
         const ctx = canvas.getContext('2d');
         let stars = [];
