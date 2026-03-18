@@ -52,6 +52,8 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(167, 139, 250, 0.1);
             transition: all 0.3s ease;
+            color: #ede9fe;
+            text-decoration: none;
         }
 
         .sidebar-btn:hover {
@@ -148,7 +150,6 @@
     </main>
 
     <script>
-        // Magenta Model Ayarları
         const model = new mm.MusicRNN('https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn');
         let generatedSequence = null;
 
@@ -207,7 +208,6 @@
             a.click();
         };
 
-        // Arka Plan Yıldız Efekti
         const canvas = document.getElementById('star-canvas');
         const ctx = canvas.getContext('2d');
         let stars = [];
