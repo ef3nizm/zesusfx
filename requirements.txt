@@ -1,5 +1,0 @@
-fastapi
-uvicorn
-gradio_client
-yt-dlp
-python-multipart
