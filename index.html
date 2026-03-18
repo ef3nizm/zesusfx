@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZESU AI STUDIO - Premium Audio Suite</title>
+    <title>ZESU AI - MIDI Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700;900&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -13,47 +13,64 @@
             --z-purple: #a78bfa;
             --z-bg: #030014;
             --z-card: rgba(15, 12, 41, 0.8);
-            --z-accent: #c084fc;
         }
 
         body {
             font-family: 'Space Grotesk', sans-serif;
             background: var(--z-bg);
             color: #ede9fe;
-            overflow-x: hidden;
             margin: 0;
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(88, 28, 135, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+            background-image: radial-gradient(circle at 10% 20%, rgba(88, 28, 135, 0.15) 0%, transparent 40%);
         }
-
-        .syncopate { font-family: 'Syncopate', sans-serif; }
 
         .glass-card {
             background: var(--z-card);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(167, 139, 250, 0.2);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 32px;
         }
 
-        .glass-card:hover {
+        .action-btn {
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background: var(--z-purple);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .sidebar-btn {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(167, 139, 250, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-btn:hover {
+            background: var(--z-purple);
+            color: #000;
+            transform: translateX(5px);
+        }
+
+        .sidebar-btn.active {
+            background: var(--z-purple);
+            color: #000;
             border-color: var(--z-purple);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px -10px rgba(167, 139, 250, 0.3);
         }
 
         #star-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             z-index: -1;
             pointer-events: none;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #fff 0%, var(--z-purple) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
         .loader {
@@ -68,67 +85,129 @@
         }
     </style>
 </head>
-
-<body>
+<body class="overflow-x-hidden">
     <div id="global-loader" class="loader">
         <div class="w-12 h-12 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
     </div>
 
     <canvas id="star-canvas"></canvas>
 
-    <main class="min-h-screen flex flex-col items-center justify-center px-6 py-20">
-        <div class="text-center mb-16 space-y-4">
-            <h2 class="text-xs font-black uppercase tracking-[0.5em] text-purple-400 opacity-80">ZESUDEV SUNAR</h2>
-            <h1 class="text-6xl md:text-8xl font-black syncopate tracking-tighter leading-none">
-                ZESU <span class="gradient-text">AI</span>
-            </h1>
-            <p class="text-lg opacity-40 font-light tracking-widest uppercase">Yapay Zeka Destekli Müzik ve Medya Merkezi</p>
-        </div>
+    <!-- Yan Menü Navigasyonu -->
+    <aside class="fixed left-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4">
+        <a href="index.html" class="sidebar-btn" title="Ana Sayfa">
+            <i class="fa-solid fa-house"></i>
+        </a>
+        <a href="midi.html" class="sidebar-btn active" title="MIDI Studio">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </a>
+        <a href="portfolio.html" class="sidebar-btn" title="Portfolyo">
+            <i class="fa-solid fa-compact-disc"></i>
+        </a>
+        <a href="youtube.html" class="sidebar-btn" title="Downloader">
+            <i class="fa-brands fa-youtube"></i>
+        </a>
+    </aside>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full">
-            <!-- MIDI Studio -->
-            <a href="midi.html" class="glass-card p-8 rounded-3xl group">
-                <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-wand-magic-sparkles text-2xl text-purple-400"></i>
+    <main class="min-h-screen flex flex-col items-center justify-center p-6 ml-12">
+        <div class="glass-card max-w-4xl w-full p-8 md:p-12">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+                <div class="text-center md:text-left">
+                    <h1 class="text-4xl font-black uppercase tracking-tighter mb-2">MIDI <span class="text-purple-400">STUDIO</span></h1>
+                    <p class="text-xs opacity-40 uppercase tracking-[0.3em] font-bold">Magenta AI Destekli Melodi Üretici</p>
                 </div>
-                <h3 class="text-2xl font-bold mb-2">MIDI Studio</h3>
-                <p class="text-sm opacity-50 leading-relaxed mb-6">Magenta AI ile saniyeler içinde benzersiz melodiler oluşturun ve indirin.</p>
-                <div class="flex items-center text-xs font-bold tracking-widest uppercase text-purple-400">
-                    BAŞLAT <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                <div class="flex gap-3">
+                    <button id="generate-btn" class="action-btn px-8 py-3 rounded-full font-bold uppercase tracking-widest text-xs">
+                        Melodi Üret
+                    </button>
+                    <button id="download-btn" disabled class="action-btn px-8 py-3 rounded-full font-bold uppercase tracking-widest text-xs opacity-30 cursor-not-allowed">
+                        MIDI İndir
+                    </button>
                 </div>
-            </a>
+            </div>
 
-            <!-- YouTube Downloader -->
-            <a href="youtube.html" class="glass-card p-8 rounded-3xl group">
-                <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i class="fa-brands fa-youtube text-2xl text-blue-400"></i>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                    <p class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">Tempo</p>
+                    <p class="text-2xl font-black">120 <span class="text-xs opacity-30">BPM</span></p>
                 </div>
-                <h3 class="text-2xl font-bold mb-2">Media Downloader</h3>
-                <p class="text-sm opacity-50 leading-relaxed mb-6">YouTube videolarını yüksek kaliteli MP3 veya MP4 formatında anında dönüştürün.</p>
-                <div class="flex items-center text-xs font-bold tracking-widest uppercase text-blue-400">
-                    KEŞFET <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                    <p class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">Durum</p>
+                    <p id="status" class="text-xl font-bold text-purple-400">Hazır</p>
                 </div>
-            </a>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                    <p class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">AI Model</p>
+                    <p class="text-xl font-bold">MusicRNN</p>
+                </div>
+            </div>
 
-            <!-- Portfolio -->
-            <a href="portfolio.html" class="glass-card p-8 rounded-3xl group">
-                <div class="w-14 h-14 bg-pink-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-compact-disc text-2xl text-pink-400"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-2">Sanatçı Portfolyosu</h3>
-                <p class="text-sm opacity-50 leading-relaxed mb-6">SoundCloud entegrasyonu ile en yeni parçalarımı ve yayınlarımı dinleyin.</p>
-                <div class="flex items-center text-xs font-bold tracking-widest uppercase text-pink-400">
-                    DİNLE <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
-                </div>
-            </a>
-        </div>
-
-        <div class="mt-20 opacity-20 text-[10px] font-bold tracking-[0.5em] uppercase">
-            Powered by zesudev
+            <div id="visualizer" class="w-full h-48 bg-black/40 rounded-2xl border border-white/5 flex items-center justify-center relative overflow-hidden">
+                <p class="text-xs opacity-20 uppercase tracking-[0.5em] font-bold">Melodi Görselleştirici</p>
+                <div id="viz-bars" class="absolute inset-0 flex items-end justify-center gap-1 p-4"></div>
+            </div>
         </div>
     </main>
 
     <script>
+        // Magenta Model Ayarları
+        const model = new mm.MusicRNN('https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn');
+        let generatedSequence = null;
+
+        const genBtn = document.getElementById('generate-btn');
+        const dlBtn = document.getElementById('download-btn');
+        const status = document.getElementById('status');
+        const vizBars = document.getElementById('viz-bars');
+
+        async function generate() {
+            try {
+                genBtn.disabled = true;
+                status.textContent = "Üretiliyor...";
+                
+                if (!model.isInitialized()) await model.initialize();
+
+                const seed = {
+                    notes: [{ pitch: 60, startTime: 0, endTime: 0.5 }],
+                    totalTime: 0.5
+                };
+
+                generatedSequence = await model.continueSequence(seed, 32, 1.0);
+                
+                dlBtn.disabled = false;
+                dlBtn.classList.remove('opacity-30', 'cursor-not-allowed');
+                status.textContent = "Tamamlandı";
+                
+                visualize(generatedSequence.notes);
+            } catch (e) {
+                status.textContent = "Hata Oluştu";
+                console.error(e);
+            } finally {
+                genBtn.disabled = false;
+            }
+        }
+
+        function visualize(notes) {
+            vizBars.innerHTML = '';
+            notes.forEach(n => {
+                const bar = document.createElement('div');
+                bar.className = 'bg-purple-500/40 w-full rounded-t-sm';
+                bar.style.height = `${(n.pitch - 40) * 2}%`;
+                vizBars.appendChild(bar);
+            });
+        }
+
+        genBtn.onclick = generate;
+
+        dlBtn.onclick = () => {
+            if (!generatedSequence) return;
+            const midi = mm.sequenceProtoToMidi(generatedSequence);
+            const blob = new Blob([midi], { type: 'audio/midi' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'zesu_ai_melody.mid';
+            a.click();
+        };
+
+        // Arka Plan Yıldız Efekti
         const canvas = document.getElementById('star-canvas');
         const ctx = canvas.getContext('2d');
         let stars = [];
@@ -136,20 +215,20 @@
         function initStars() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            stars = Array.from({ length: 150 }, () => ({
+            stars = Array.from({ length: 100 }, () => ({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                s: Math.random() * 1.5,
-                v: Math.random() * 0.3
+                s: Math.random() * 2,
+                v: Math.random() * 0.5
             }));
         }
 
         function drawStars() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "rgba(167,139,250,0.2)";
+            ctx.fillStyle = "rgba(167,139,250,0.3)";
             stars.forEach(s => {
                 ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI * 2); ctx.fill();
-                s.x -= s.v; if (s.x < 0) s.x = canvas.width;
+                s.y -= s.v; if (s.y < 0) s.y = canvas.height;
             });
             requestAnimationFrame(drawStars);
         }
@@ -159,7 +238,7 @@
             setTimeout(() => {
                 document.getElementById('global-loader').style.opacity = '0';
                 setTimeout(() => document.getElementById('global-loader').style.display = 'none', 600);
-            }, 800);
+            }, 600);
         };
         window.onresize = initStars;
     </script>
