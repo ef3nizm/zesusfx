@@ -194,6 +194,7 @@
     <nav class="fixed top-0 w-full z-50 px-4 md:px-6 py-4 md:py-6 bg-black/40 backdrop-blur-xl border-b border-purple-900/20">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <button onclick="scrollToTop()" class="group flex items-center space-x-2 md:space-x-3 outline-none">
+                <!-- Navigasyonda site ikonunu kullanmaya devam ediyoruz -->
                 <img src="shared/images/siteicon.png" alt="Zesu Logo" class="brand-avatar" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Zesu&top=flower&backgroundColor=a855f7'">
                 <h1 class="text-lg md:text-2xl font-bold tracking-widest text-white group-hover:text-purple-400 transition-colors uppercase">ZESU</h1>
             </button>
@@ -260,7 +261,8 @@
                     <div class="lg:col-span-5 glass-card p-8 md:p-10 flex flex-col items-center text-center">
                         <div class="relative group mb-6 md:mb-8">
                             <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
-                            <img src="shared/images/siteicon.png" alt="Zesu Profil" class="relative w-32 h-32 md:w-48 md:h-48 rounded-full border-2 border-white/10 shadow-2xl object-cover grayscale hover:grayscale-0 transition-all duration-500" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Zesu&top=flower&backgroundColor=a855f7'">
+                            <!-- Bu bölümdeki görseli eski haline (DiceBear) döndürdüm -->
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Zesu&top=flower&backgroundColor=a855f7" alt="Zesu Profil" class="relative w-32 h-32 md:w-48 md:h-48 rounded-full border-2 border-white/10 shadow-2xl object-cover grayscale hover:grayscale-0 transition-all duration-500">
                         </div>
                         <h4 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-wider mb-2">Zesu</h4>
                         <div class="experience-tag text-base md:text-lg mb-4 md:mb-6 uppercase tracking-widest">4 Yıllık Deneyim</div>
@@ -481,7 +483,7 @@
 
         function resetConverter() {
             document.getElementById('result-stage').classList.add('hidden');
-            document.getElementById('upload-stage').remove('hidden');
+            document.getElementById('upload-stage').classList.remove('hidden');
             document.getElementById('fileInput').value = "";
             document.getElementById('progress').style.width = '0%';
         }
