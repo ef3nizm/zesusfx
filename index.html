@@ -160,13 +160,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .experience-tag {
-            background: linear-gradient(90deg, #a855f7 0%, #6366f1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-
         .roblox-icon {
             display: inline-block;
             width: 24px;
@@ -234,104 +227,8 @@
                         <i class="fab fa-soundcloud mr-2"></i> SoundCloud
                     </a>
                     <a href="#about" class="w-full md:w-auto px-8 py-4 border border-purple-500/30 hover:border-purple-500 text-purple-200 rounded-full font-bold uppercase tracking-widest transition-all text-center text-sm">
-                        Hakkımda
+                        Hikayem
                     </a>
-                </div>
-            </div>
-
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
-                <a href="#about" class="text-purple-500/50 text-2xl hover:text-purple-500 transition-colors">
-                    <i class="fas fa-chevron-down"></i>
-                </a>
-            </div>
-        </section>
-
-        <!-- Hakkımda & Deneyim Bölümü -->
-        <section id="about" class="py-20 md:py-32 px-6">
-            <div class="max-w-5xl mx-auto">
-                <div class="flex items-center gap-4 md:gap-6 mb-12 md:after:mb-16">
-                    <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent to-purple-900"></div>
-                    <h3 class="brand-font text-xl md:text-2xl text-purple-200 uppercase tracking-[0.2em] md:tracking-[0.4em]">Hakkımda</h3>
-                    <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-purple-900"></div>
-                </div>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
-                    <!-- Sol Kolon -->
-                    <div class="lg:col-span-5 glass-card p-8 md:p-10 flex flex-col items-center text-center">
-                        <div class="relative group mb-6 md:mb-8">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
-                            <!-- Hakkımda bölümündeki profil ikonu isteğin üzerine shared/images/icon.png olarak güncellendi -->
-                            <img src="shared/images/icon.png" alt="Zesu Profil" class="relative w-32 h-32 md:w-48 md:h-48 rounded-full border-2 border-white/10 shadow-2xl object-cover grayscale hover:grayscale-0 transition-all duration-500" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Zesu&top=flower&backgroundColor=a855f7'">
-                        </div>
-                        <h4 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-wider mb-2">Zesu</h4>
-                        <div class="experience-tag text-base md:text-lg mb-4 md:mb-6 uppercase tracking-widest">4 Yıllık Deneyim</div>
-                        <p class="text-purple-200/70 leading-relaxed font-light mb-8 text-sm md:text-base">
-                            SoundCloud platformunda 4 yıldır ses tasarımı ve prodüksiyon süreçlerini yönetiyorum. Atmosferik tonlar ve deneysel melodiler üzerine odaklanıyorum.
-                        </p>
-                        <div class="flex gap-4 md:gap-6">
-                            <div class="text-center">
-                                <span class="block text-xl md:text-2xl font-bold text-white">4+</span>
-                                <span class="text-[8px] md:text-[10px] text-purple-500 uppercase tracking-tighter">Yıl</span>
-                            </div>
-                            <div class="w-[1px] bg-purple-500/20"></div>
-                            <div class="text-center">
-                                <span class="block text-xl md:text-2xl font-bold text-white">50+</span>
-                                <span class="text-[8px] md:text-[10px] text-purple-500 uppercase tracking-tighter">Proje</span>
-                            </div>
-                            <div class="w-[1px] bg-purple-500/20"></div>
-                            <div class="text-center">
-                                <span class="block text-xl md:text-2xl font-bold text-white">Cloud</span>
-                                <span class="text-[8px] md:text-[10px] text-purple-500 uppercase tracking-tighter">Odaklı</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sağ Kolon -->
-                    <div class="lg:col-span-7 space-y-6 md:space-y-8">
-                        <div class="glass-card p-6 md:p-8 hover:border-purple-500/40 transition-colors group">
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <h5 class="text-lg md:text-xl font-bold text-purple-300 uppercase tracking-widest">Prodüktör</h5>
-                                    <span class="text-[10px] md:text-xs text-purple-500/60 uppercase">2022 - Günümüz</span>
-                                </div>
-                                <i class="fab fa-soundcloud text-2xl md:text-3xl text-[#ff5500]/50 group-hover:text-[#ff5500] transition-colors"></i>
-                            </div>
-                            <p class="text-[12px] md:text-sm text-purple-100/60 mb-6">
-                                SoundCloud ekosisteminde bağımsız bir sanatçı olarak 4 yıldır üretim yapıyorum. Bu süreçte dijital ses işleme ve harmonik yapılandırma konularında derin tecrübe kazandım.
-                            </p>
-                            <div class="space-y-4">
-                                <div>
-                                    <div class="flex justify-between text-[8px] md:text-[10px] uppercase tracking-widest mb-1">
-                                        <span>Prodüksiyon Hızı</span>
-                                        <span>%95</span>
-                                    </div>
-                                    <div class="h-1 bg-purple-900/30 rounded-full overflow-hidden">
-                                        <div class="h-full bg-purple-500 w-[95%]"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-[8px] md:text-[10px] uppercase tracking-widest mb-1">
-                                        <span>Mix & Mastering</span>
-                                        <span>%54</span>
-                                    </div>
-                                    <div class="h-1 bg-purple-900/30 rounded-full overflow-hidden">
-                                        <div class="h-full bg-purple-500 w-[54%]"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                            <div class="glass-card p-5 md:p-6 border-l-4 border-l-purple-600">
-                                <h6 class="text-xs md:text-sm font-bold text-white mb-2 uppercase tracking-tighter">Atmosferik Ses</h6>
-                                <p class="text-[10px] md:text-[11px] text-purple-300/50 leading-snug">Derin ve etkileyici ses sahneleri oluşturma yeteneği.</p>
-                            </div>
-                            <div class="glass-card p-5 md:p-6 border-l-4 border-l-blue-600">
-                                <h6 class="text-xs md:text-sm font-bold text-white mb-2 uppercase tracking-tighter">Deneysel Melodi</h6>
-                                <p class="text-[10px] md:text-[11px] text-purple-300/50 leading-snug">Alışılmışın dışında ritmik yapılar.</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -346,23 +243,26 @@
                 </div>
                 
                 <div class="glass-card p-2 md:p-4 shadow-2xl overflow-hidden ring-1 ring-purple-500/20">
-                    <div class="rounded-lg md:rounded-xl overflow-hidden bg-black">
+                    <div class="rounded-lg md:rounded-xl overflow-hidden bg-black/40 min-h-[450px]">
                         <iframe 
+                            id="sc-widget"
                             width="100%" 
-                            height="350" 
-                            class="md:h-[450px]"
+                            height="450" 
                             scrolling="no" 
                             frameborder="no" 
                             allow="autoplay" 
-                            src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/zesudev&color=%23a855f7&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false&theme_color=%23000000">
+                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/1206121981&color=%23a855f7&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=false">
                         </iframe>
                     </div>
+                    <p class="text-[9px] text-center text-purple-500/40 mt-3 uppercase tracking-widest">
+                        Ses verileri SoundCloud API üzerinden çekilmektedir.
+                    </p>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- MP3 TO MIDI SAYFASI -->
+    <!-- MIDI SAYFASI -->
     <main id="midi-page" class="page-content pt-24 md:pt-32 pb-20 px-6">
         <div class="max-w-3xl mx-auto text-center">
             <h2 class="text-3xl md:text-6xl font-bold mb-4 md:mb-6 purple-glow tracking-tighter uppercase">MP3 TO MIDI</h2>
@@ -391,7 +291,7 @@
                             <div class="w-1 h-8 bg-purple-400 animate-[bounce_1s_infinite_0.4s]"></div>
                         </div>
                         <div class="w-full max-w-xs bg-purple-900/20 h-1.5 rounded-full overflow-hidden">
-                            <div id="progress" class="h-full bg-gradient-to-r from-purple-600 to-blue-400 w-0 transition-all duration-300 shadow-[0_0_10px_#a855f7]"></div>
+                            <div id="progress" class="h-full bg-gradient-to-r from-purple-600 to-blue-400 w-0 transition-all duration-300"></div>
                         </div>
                         <p id="status-text" class="text-purple-200 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">Analiz Ediliyor...</p>
                     </div>
@@ -414,17 +314,38 @@
 
     <!-- Footer -->
     <footer class="py-16 md:py-24 bg-black/60 border-t border-purple-900/20 px-6">
-        <div class="max-w-4xl mx-auto flex flex-col items-center">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center">
             <div class="flex gap-8 md:gap-12 mb-12 md:mb-16">
                 <a href="https://soundcloud.com/zesudev" target="_blank" class="text-2xl md:text-3xl text-purple-500 hover:text-white transition-all"><i class="fab fa-soundcloud"></i></a>
                 <a href="https://www.instagram.com/m.efecan011/" target="_blank" class="text-2xl md:text-3xl text-purple-500 hover:text-white transition-all"><i class="fab fa-instagram"></i></a>
                 <a href="https://www.roblox.com/users/1140047458/profile" target="_blank" class="text-2xl md:text-3xl text-purple-500 hover:text-white transition-all"><span class="roblox-icon"></span></a>
             </div>
-            <p class="text-[8px] md:text-[10px] tracking-[0.8em] md:tracking-[1.5em] text-purple-900 uppercase text-center">MADE BY ZESUDEV © 2026</p>
+            <p class="text-[8px] md:text-[10px] tracking-[0.8em] md:tracking-[1.5em] text-purple-900 uppercase font-bold">ZESU © 2026</p>
         </div>
     </footer>
 
     <script>
+        // Sayfa yenilendiğinde en başa kaydır ve Ana Sayfayı göster
+        window.onbeforeunload = function () {
+            window.scrollTo(0, 0);
+        };
+
+        window.onload = function() {
+            // URL'deki hash (#about gibi) temizle ve başa sar
+            if (window.location.hash) {
+                history.replaceState("", document.title, window.location.pathname + window.location.search);
+            }
+            window.scrollTo(0, 0);
+            showPage('home'); // Sayfa açılışında ana sayfayı aktif et
+
+            // SoundCloud Yenileme
+            const scWidget = document.getElementById('sc-widget');
+            if (scWidget) {
+                const currentSrc = scWidget.src;
+                scWidget.src = currentSrc + "&ts=" + new Date().getTime();
+            }
+        };
+
         function showPage(pageId) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(pageId + '-page');
@@ -441,7 +362,6 @@
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             selectedFileName = file.name.split('.').slice(0, -1).join('.') + ".mid";
             document.getElementById('upload-stage').classList.add('hidden');
             document.getElementById('processing-stage').classList.remove('hidden');
@@ -452,13 +372,11 @@
             const steps = ["Frekanslar Taranıyor", "Pitch Algılanıyor", "MIDI Yazılıyor"];
 
             const interval = setInterval(() => {
-                progress += Math.random() * 4;
+                progress += Math.random() * 5;
                 if (progress > 100) progress = 100;
                 bar.style.width = progress + '%';
-                
                 const stepIdx = Math.min(Math.floor((progress / 100) * steps.length), steps.length - 1);
                 status.innerText = steps[stepIdx] + "...";
-
                 if (progress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
