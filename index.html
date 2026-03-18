@@ -160,6 +160,13 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .experience-tag {
+            background: linear-gradient(90deg, #a855f7 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
         .roblox-icon {
             display: inline-block;
             width: 24px;
@@ -242,8 +249,10 @@
                     <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-purple-900"></div>
                 </div>
                 
+                <!-- SoundCloud Widget Alanı -->
                 <div class="glass-card p-2 md:p-4 shadow-2xl overflow-hidden ring-1 ring-purple-500/20">
                     <div class="rounded-lg md:rounded-xl overflow-hidden bg-black/40 min-h-[450px]">
+                        <!-- Kararlı Liste Görünümü Widget'ı -->
                         <iframe 
                             id="sc-widget"
                             width="100%" 
@@ -255,14 +264,14 @@
                         </iframe>
                     </div>
                     <p class="text-[9px] text-center text-purple-500/40 mt-3 uppercase tracking-widest">
-                        Ses verileri SoundCloud API üzerinden çekilmektedir.
+                        Ses verileri SoundCloud API üzerinden anonim olarak çekilmektedir.
                     </p>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- MIDI SAYFASI -->
+    <!-- MP3 TO MIDI SAYFASI -->
     <main id="midi-page" class="page-content pt-24 md:pt-32 pb-20 px-6">
         <div class="max-w-3xl mx-auto text-center">
             <h2 class="text-3xl md:text-6xl font-bold mb-4 md:mb-6 purple-glow tracking-tighter uppercase">MP3 TO MIDI</h2>
@@ -291,7 +300,7 @@
                             <div class="w-1 h-8 bg-purple-400 animate-[bounce_1s_infinite_0.4s]"></div>
                         </div>
                         <div class="w-full max-w-xs bg-purple-900/20 h-1.5 rounded-full overflow-hidden">
-                            <div id="progress" class="h-full bg-gradient-to-r from-purple-600 to-blue-400 w-0 transition-all duration-300"></div>
+                            <div id="progress" class="h-full bg-gradient-to-r from-purple-600 to-blue-400 w-0 transition-all duration-300 shadow-[0_0_10px_#a855f7]"></div>
                         </div>
                         <p id="status-text" class="text-purple-200 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">Analiz Ediliyor...</p>
                     </div>
@@ -321,31 +330,11 @@
                 <a href="https://www.roblox.com/users/1140047458/profile" target="_blank" class="text-2xl md:text-3xl text-purple-500 hover:text-white transition-all"><span class="roblox-icon"></span></a>
             </div>
             <p class="text-[8px] md:text-[10px] tracking-[0.8em] md:tracking-[1.5em] text-purple-900 uppercase font-bold">ZESU © 2026</p>
+            <p class="text-[7px] text-purple-900/40 mt-4 uppercase tracking-widest">Sitede hiçbir kullanıcı verisi veya IP adresi saklanmamaktadır.</p>
         </div>
     </footer>
 
     <script>
-        // Sayfa yenilendiğinde en başa kaydır ve Ana Sayfayı göster
-        window.onbeforeunload = function () {
-            window.scrollTo(0, 0);
-        };
-
-        window.onload = function() {
-            // URL'deki hash (#about gibi) temizle ve başa sar
-            if (window.location.hash) {
-                history.replaceState("", document.title, window.location.pathname + window.location.search);
-            }
-            window.scrollTo(0, 0);
-            showPage('home'); // Sayfa açılışında ana sayfayı aktif et
-
-            // SoundCloud Yenileme
-            const scWidget = document.getElementById('sc-widget');
-            if (scWidget) {
-                const currentSrc = scWidget.src;
-                scWidget.src = currentSrc + "&ts=" + new Date().getTime();
-            }
-        };
-
         function showPage(pageId) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(pageId + '-page');
@@ -362,6 +351,7 @@
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
+
             selectedFileName = file.name.split('.').slice(0, -1).join('.') + ".mid";
             document.getElementById('upload-stage').classList.add('hidden');
             document.getElementById('processing-stage').classList.remove('hidden');
@@ -372,11 +362,13 @@
             const steps = ["Frekanslar Taranıyor", "Pitch Algılanıyor", "MIDI Yazılıyor"];
 
             const interval = setInterval(() => {
-                progress += Math.random() * 5;
+                progress += Math.random() * 4;
                 if (progress > 100) progress = 100;
                 bar.style.width = progress + '%';
+                
                 const stepIdx = Math.min(Math.floor((progress / 100) * steps.length), steps.length - 1);
                 status.innerText = steps[stepIdx] + "...";
+
                 if (progress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
@@ -404,6 +396,15 @@
             document.getElementById('fileInput').value = "";
             document.getElementById('progress').style.width = '0%';
         }
+
+        // SoundCloud widget'ını her sayfa yüklendiğinde tazelemek için bir timestamp ekleyebiliriz (Önbelleği aşmak için)
+        window.onload = function() {
+            const scWidget = document.getElementById('sc-widget');
+            if (scWidget) {
+                const currentSrc = scWidget.src;
+                scWidget.src = currentSrc + "&ts=" + new Date().getTime();
+            }
+        };
     </script>
 </body>
 </html>
