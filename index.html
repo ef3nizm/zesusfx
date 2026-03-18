@@ -88,13 +88,14 @@
     </style>
 </head>
 <body class="overflow-x-hidden">
+    <!-- Yükleme Ekranı -->
     <div id="global-loader" class="loader">
         <div class="w-12 h-12 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
     </div>
 
     <canvas id="star-canvas"></canvas>
 
-    <!-- Yan Menü Navigasyonu -->
+    <!-- Yan Menü Navigasyonu (Fixlendi) -->
     <aside class="fixed left-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4">
         <a href="index.html" class="sidebar-btn" title="Ana Sayfa">
             <i class="fa-solid fa-house"></i>
@@ -150,6 +151,7 @@
     </main>
 
     <script>
+        // Magenta.js Model Başlatma
         const model = new mm.MusicRNN('https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn');
         let generatedSequence = null;
 
@@ -165,11 +167,13 @@
                 
                 if (!model.isInitialized()) await model.initialize();
 
+                // Rastgele başlangıç notası
                 const seed = {
-                    notes: [{ pitch: 60, startTime: 0, endTime: 0.5 }],
+                    notes: [{ pitch: Math.floor(Math.random() * (72 - 60 + 1)) + 60, startTime: 0, endTime: 0.5 }],
                     totalTime: 0.5
                 };
 
+                // AI ile devam ettir
                 generatedSequence = await model.continueSequence(seed, 32, 1.0);
                 
                 dlBtn.disabled = false;
@@ -185,11 +189,12 @@
             }
         }
 
+        // Görselleştirme Fonksiyonu
         function visualize(notes) {
             vizBars.innerHTML = '';
             notes.forEach(n => {
                 const bar = document.createElement('div');
-                bar.className = 'bg-purple-500/40 w-full rounded-t-sm';
+                bar.className = 'bg-purple-500/40 w-full rounded-t-sm transition-all duration-500';
                 bar.style.height = `${(n.pitch - 40) * 2}%`;
                 vizBars.appendChild(bar);
             });
@@ -197,6 +202,7 @@
 
         genBtn.onclick = generate;
 
+        // MIDI İndirme Fonksiyonu
         dlBtn.onclick = () => {
             if (!generatedSequence) return;
             const midi = mm.sequenceProtoToMidi(generatedSequence);
@@ -208,6 +214,7 @@
             a.click();
         };
 
+        // Arka Plan Yıldız Efekti
         const canvas = document.getElementById('star-canvas');
         const ctx = canvas.getContext('2d');
         let stars = [];
@@ -234,10 +241,14 @@
         }
 
         window.onload = () => {
-            initStars(); drawStars();
+            initStars(); 
+            drawStars();
             setTimeout(() => {
-                document.getElementById('global-loader').style.opacity = '0';
-                setTimeout(() => document.getElementById('global-loader').style.display = 'none', 600);
+                const loader = document.getElementById('global-loader');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 600);
+                }
             }, 600);
         };
         window.onresize = initStars;
