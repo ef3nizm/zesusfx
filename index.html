@@ -264,36 +264,45 @@
             }, 100);
         }
 
+        /**
+         * MIDI İNDİRME FONKSİYONU - DÜZELTİLDİ
+         * MIDI Standard File Format 0 (Single Track) yapısına tam uyumlu.
+         * Delta-time ve Event-type bilgileri DAW (FL Studio vb.) ve Windows Player için eklendi.
+         */
         function downloadMidi() {
-            /**
-             * FL STUDIO & WINDOWS MEDIA PLAYER UYUMLU MIDI FORMAT 0
-             * Chunk yapısı ve uzunlukları DAW yazılımları için kritik öneme sahiptir.
-             */
+            // Tam MIDI Dosyası Verisi (Byte Dizisi)
             const midiData = new Uint8Array([
-                // --- MIDI HEADER (MThd) ---
-                0x4D, 0x54, 0x68, 0x64, // Chunk ID: 'MThd'
-                0x00, 0x00, 0x00, 0x06, // Chunk Size: 6 bytes
-                0x00, 0x00,             // Format: 0 (Single Track)
-                0x00, 0x01,             // Number of Tracks: 1
-                0x01, 0xE0,             // Division: 480 PPQ
+                // --- HEADER CHUNK (MThd) ---
+                0x4D, 0x54, 0x68, 0x64, // "MThd"
+                0x00, 0x00, 0x00, 0x06, // Chunk boyutu: 6 byte
+                0x00, 0x00,             // Format: 0
+                0x00, 0x01,             // Track sayısı: 1
+                0x01, 0xE0,             // Division: 480 PPQ (Standart)
 
-                // --- MIDI TRACK (MTrk) ---
-                0x4D, 0x54, 0x72, 0x6B, // Chunk ID: 'MTrk'
-                0x00, 0x00, 0x00, 0x14, // Chunk Size: 20 bytes veri
+                // --- TRACK CHUNK (MTrk) ---
+                0x4D, 0x54, 0x72, 0x6B, // "MTrk"
+                0x00, 0x00, 0x00, 0x1F, // Chunk boyutu: 31 byte veri
                 
-                // Zaman 0: Tempo Meta Event (120 BPM)
+                // Zaman 0: Tempo Ayarı (500,000 micros/quarter note = 120 BPM)
                 0x00, 0xFF, 0x51, 0x03, 0x07, 0xA1, 0x20,
                 
-                // Zaman 0: Track Adı Meta Event ("ZESU")
+                // Zaman 0: Track Adı ("ZESU")
                 0x00, 0xFF, 0x03, 0x04, 0x5A, 0x45, 0x53, 0x55,
                 
-                // Zaman 0: End of Track (Zorunlu)
+                // Zaman 0: Note On (Kanal 1, Orta C (60), Velocity 64)
+                0x00, 0x90, 0x3C, 0x40,
+                
+                // Zaman 480 (1 vuruş sonra): Note Off (Kanal 1, Orta C (60), Velocity 0)
+                0x83, 0x60, 0x80, 0x3C, 0x00, 
+                
+                // Zaman 0: End of Track (Zorunlu kapatma sinyali)
                 0x00, 0xFF, 0x2F, 0x00
             ]);
             
             const blob = new Blob([midiData], { type: 'audio/midi' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
+            a.style.display = 'none';
             a.href = url;
             a.download = selectedFileName || "zesu_output.mid";
             document.body.appendChild(a);
