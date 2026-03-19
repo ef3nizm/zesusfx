@@ -265,25 +265,37 @@
         }
 
         function downloadMidi() {
-            // Gerçek ve Tam MIDI Dosyası Yapısı (Standart MIDI File Format 0)
+            /**
+             * FL STUDIO & WINDOWS MEDIA PLAYER UYUMLU MIDI FORMAT 0
+             * Chunk yapısı ve uzunlukları DAW yazılımları için kritik öneme sahiptir.
+             */
             const midiData = new Uint8Array([
-                0x4D, 0x54, 0x68, 0x64, // 'MThd' Başlığı
-                0x00, 0x00, 0x00, 0x06, // Başlık Uzunluğu (6 byte)
-                0x00, 0x00,             // Format 0 (Tek Track)
-                0x00, 0x01,             // 1 Track
-                0x01, 0xE0,             // 480 PPQ (Zamanlama)
+                // --- MIDI HEADER (MThd) ---
+                0x4D, 0x54, 0x68, 0x64, // Chunk ID: 'MThd'
+                0x00, 0x00, 0x00, 0x06, // Chunk Size: 6 bytes
+                0x00, 0x00,             // Format: 0 (Single Track)
+                0x00, 0x01,             // Number of Tracks: 1
+                0x01, 0xE0,             // Division: 480 PPQ
+
+                // --- MIDI TRACK (MTrk) ---
+                0x4D, 0x54, 0x72, 0x6B, // Chunk ID: 'MTrk'
+                0x00, 0x00, 0x00, 0x14, // Chunk Size: 20 bytes veri
                 
-                0x4D, 0x54, 0x72, 0x6B, // 'MTrk' Başlığı
-                0x00, 0x00, 0x00, 0x0B, // Track Verisi Uzunluğu (11 byte)
-                0x00, 0xFF, 0x51, 0x03, 0x07, 0xA1, 0x20, // Tempo (120 BPM)
-                0x00, 0xFF, 0x2F, 0x00  // Track Sonu (End of Track Meta Event)
+                // Zaman 0: Tempo Meta Event (120 BPM)
+                0x00, 0xFF, 0x51, 0x03, 0x07, 0xA1, 0x20,
+                
+                // Zaman 0: Track Adı Meta Event ("ZESU")
+                0x00, 0xFF, 0x03, 0x04, 0x5A, 0x45, 0x53, 0x55,
+                
+                // Zaman 0: End of Track (Zorunlu)
+                0x00, 0xFF, 0x2F, 0x00
             ]);
             
             const blob = new Blob([midiData], { type: 'audio/midi' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = selectedFileName;
+            a.download = selectedFileName || "zesu_output.mid";
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
