@@ -195,6 +195,10 @@
         }
         body.entered #volume-control { opacity: 1; transform: none; pointer-events: auto; }
         @media (min-width: 768px) { #volume-control { top: 104px; left: 24px; } }
+        
+        .player-ctrl-btn { color: #c084fc; font-size: 14px; background: none; border: 0; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
+        .player-ctrl-btn:hover { color: #fff; transform: scale(1.15); }
+        
         #vol-btn { color: #c084fc; font-size: 16px; width: 22px; background: none; border: 0; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
         #vol-btn:hover { color: #fff; transform: scale(1.15); }
         #vol-slider {
@@ -305,6 +309,10 @@
     </div>
 
     <div id="volume-control">
+        <button id="prev-btn" class="player-ctrl-btn" aria-label="Önceki şarkı"><i class="fas fa-backward-step"></i></button>
+        <button id="play-pause-btn" class="player-ctrl-btn" aria-label="Oynat / Durdur"><i class="fas fa-play"></i></button>
+        <button id="next-btn" class="player-ctrl-btn" aria-label="Sonraki şarkı"><i class="fas fa-forward-step"></i></button>
+        <div class="h-4 w-[1px] bg-purple-500/20 mx-1"></div>
         <button id="vol-btn" aria-label="Sesi aç / kapat"><i class="fas fa-volume-high"></i></button>
         <div class="flex flex-col gap-2">
             <input id="vol-slider" type="range" min="0" max="100" value="10" aria-label="Ses seviyesi">
@@ -559,11 +567,16 @@
         const volBtn = document.getElementById('vol-btn');
         const volValue = document.getElementById('vol-value');
         const nowPlaying = document.getElementById('now-playing');
+        
+        const prevBtn = document.getElementById('prev-btn');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const nextBtn = document.getElementById('next-btn');
+
         let volume = 10;
         let lastVolume = 60;
         let widgetReady = false;
         let entered = false;
-
+        let isPlaying = false;
 
         function applyVolume(v) {
             volume = v;
@@ -599,6 +612,13 @@
 
         volSlider.addEventListener('input', e => applyVolume(parseInt(e.target.value, 10)));
         volBtn.addEventListener('click', () => applyVolume(volume === 0 ? lastVolume : 0));
+        
+        prevBtn.addEventListener('click', () => { if (widgetReady) widget.prev(); });
+        nextBtn.addEventListener('click', () => { if (widgetReady) widget.next(); });
+        playPauseBtn.addEventListener('click', () => {
+            if (widgetReady) widget.toggle();
+        });
+
         enterScreen.addEventListener('click', enterSite);
         document.addEventListener('keydown', e => {
             if (!entered && (e.key === 'Enter' || e.key === ' ')) {
@@ -613,10 +633,16 @@
             if (entered) widget.play();
         });
         widget.bind(SC.Widget.Events.PLAY, () => {
+            isPlaying = true;
             document.body.classList.add('playing');
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
             updateTitle();
         });
-        widget.bind(SC.Widget.Events.PAUSE, () => document.body.classList.remove('playing'));
+        widget.bind(SC.Widget.Events.PAUSE, () => {
+            isPlaying = false;
+            document.body.classList.remove('playing');
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        });
 
         const eq = document.getElementById('eq');
         for (let i = 0; i < 32; i++) {
