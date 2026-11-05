@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.min.js"></script>
     <script src="https://w.soundcloud.com/player/api.js"></script>
+    <!-- HLS.js (M3U8 yayınları için) -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
@@ -24,25 +26,16 @@
         h1, h2, h3, .brand-font { font-family: 'Syncopate', sans-serif; }
 
         .brand-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid #a855f7;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
-            object-fit: cover;
-            transition: all 0.5s ease;
-            background-color: #1a1a1a;
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2px solid #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+            object-fit: cover; transition: all 0.5s ease; background-color: #1a1a1a;
         }
-
         @media (min-width: 768px) { .brand-avatar { width: 40px; height: 40px; } }
         .group:hover .brand-avatar { transform: scale(1.1) rotate(5deg); box-shadow: 0 0 25px rgba(168, 85, 247, 0.9); }
 
         .lightning-bolt {
-            color: #a855f7;
-            filter: drop-shadow(0 0 15px #a855f7);
-            animation: flicker 2s infinite;
-            display: inline-block;
-            transform: skewX(-10deg);
+            color: #a855f7; filter: drop-shadow(0 0 15px #a855f7);
+            animation: flicker 2s infinite; display: inline-block; transform: skewX(-10deg);
         }
         @keyframes flicker {
             0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; filter: drop-shadow(0 0 20px #a855f7) brightness(1.2); }
@@ -51,11 +44,9 @@
 
         .night { position: fixed; top: 0; left: 0; width: 100%; height: 100%; transform: rotateZ(45deg); z-index: -1; }
         .shooting_star {
-            position: absolute;
-            left: 50%; top: 50%; height: 2px;
+            position: absolute; left: 50%; top: 50%; height: 2px;
             background: linear-gradient(-45deg, #a855f7, rgba(0, 0, 255, 0));
-            border-radius: 999px;
-            filter: drop-shadow(0 0 6px #a855f7);
+            border-radius: 999px; filter: drop-shadow(0 0 6px #a855f7);
             animation: tail 3000ms ease-in-out infinite, shooting 3000ms ease-in-out infinite;
         }
         .shooting_star::before, .shooting_star::after {
@@ -69,7 +60,6 @@
         .shooting_star:nth-child(3) { top: 50%; left: 20%; animation-delay: 1600ms; }
         .shooting_star:nth-child(4) { top: 70%; left: 80%; animation-delay: 2400ms; }
         .shooting_star:nth-child(5) { top: 20%; left: 90%; animation-delay: 1200ms; }
-
         @keyframes tail { 0% { width: 0; } 30% { width: 100px; } 100% { width: 0; } }
         @keyframes shining { 0% { width: 0; } 50% { width: 30px; } 100% { width: 0; } }
         @keyframes shooting { 0% { transform: translateX(0); } 100% { transform: translateX(300px); } }
@@ -87,72 +77,35 @@
         .experience-tag { background: linear-gradient(90deg, #a855f7 0%, #6366f1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
 
         .roblox-icon {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            background-color: currentColor;
+            display: inline-block; width: 18px; height: 18px; background-color: currentColor;
             mask: url('https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg') no-repeat center;
             -webkit-mask: url('https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg') no-repeat center;
-            mask-size: contain;
-            -webkit-mask-size: contain;
+            mask-size: contain; -webkit-mask-size: contain;
         }
 
         .software-badge {
-            display: flex;
-            align-items: center;
-            background: rgba(168, 85, 247, 0.05);
-            border: 1px solid rgba(168, 85, 247, 0.1);
-            padding: 10px 16px;
-            border-radius: 12px;
-            transition: all 0.4s ease;
+            display: flex; align-items: center;
+            background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.1);
+            padding: 10px 16px; border-radius: 12px; transition: all 0.4s ease;
         }
-        .software-badge:hover {
-            background: rgba(168, 85, 247, 0.15);
-            border-color: rgba(168, 85, 247, 0.4);
-            transform: scale(1.02);
-        }
-        .software-logo-box {
-            width: 32px;
-            height: 32px;
-            margin-right: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .software-badge:hover { background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.4); transform: scale(1.02); }
+        .software-logo-box { width: 32px; height: 32px; margin-right: 12px; display: flex; align-items: center; justify-content: center; }
 
         .social-container {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(168, 85, 247, 0.1);
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(168, 85, 247, 0.1);
+            display: flex; gap: 12px; flex-wrap: wrap;
         }
-
         .social-link {
-            display: flex;
-            align-items: center;
-            padding: 8px 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(168, 85, 247, 0.1);
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.6);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            display: flex; align-items: center; padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(168, 85, 247, 0.1);
+            border-radius: 8px; font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
         }
-
         .social-link i, .social-link .roblox-icon { margin-right: 8px; font-size: 14px; }
         .social-link:hover {
-            transform: translateY(-3px);
-            color: #fff;
-            border-color: rgba(168, 85, 247, 0.5);
-            background: rgba(168, 85, 247, 0.1);
-            box-shadow: 0 5px 15px rgba(168, 85, 247, 0.2);
+            transform: translateY(-3px); color: #fff; border-color: rgba(168, 85, 247, 0.5);
+            background: rgba(168, 85, 247, 0.1); box-shadow: 0 5px 15px rgba(168, 85, 247, 0.2);
         }
         .social-link.instagram:hover { color: #E1306C; border-color: #E1306C; }
         .social-link.soundcloud:hover { color: #ff5500; border-color: #ff5500; }
@@ -164,58 +117,133 @@
             position: fixed; inset: 0; z-index: 100; overflow: hidden;
             background: radial-gradient(circle at 50% 40%, #1a0638 0%, #05010d 70%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: opacity 0.9s ease, transform 0.9s ease, visibility 0.9s;
+            cursor: pointer; transition: opacity 0.9s ease, transform 0.9s ease, visibility 0.9s;
         }
         #enter-screen.leaving { opacity: 0; transform: scale(1.08); visibility: hidden; pointer-events: none; }
         .enter-ring {
             position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-            border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50%;
-            animation: ringPulse 4s ease-out infinite;
+            border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50%; animation: ringPulse 4s ease-out infinite;
         }
-        @keyframes ringPulse {
-            0% { width: 120px; height: 120px; opacity: 0.8; }
-            100% { width: 900px; height: 900px; opacity: 0; }
-        }
+        @keyframes ringPulse { 0% { width: 120px; height: 120px; opacity: 0.8; } 100% { width: 900px; height: 900px; opacity: 0; } }
         .enter-hint { animation: hintPulse 2s ease-in-out infinite; }
-        @keyframes hintPulse {
-            0%, 100% { opacity: 0.35; letter-spacing: 0.5em; }
-            50% { opacity: 1; letter-spacing: 0.6em; }
-        }
+        @keyframes hintPulse { 0%, 100% { opacity: 0.35; letter-spacing: 0.5em; } 50% { opacity: 1; letter-spacing: 0.6em; } }
 
+        /* === PLAYER === */
         #volume-control {
             position: fixed; top: 82px; left: 12px; z-index: 60;
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 14px; border-radius: 16px;
-            background: rgba(15, 5, 25, 0.7); backdrop-filter: blur(15px);
-            border: 1px solid rgba(168, 85, 247, 0.25);
-            box-shadow: 0 0 25px rgba(168, 85, 247, 0.12);
+            display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 20px;
+            background: rgba(15, 5, 25, 0.85); backdrop-filter: blur(20px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.15);
             opacity: 0; transform: translateX(-20px); pointer-events: none;
             transition: opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s;
+            max-width: calc(100vw - 24px);
         }
         body.entered #volume-control { opacity: 1; transform: none; pointer-events: auto; }
         @media (min-width: 768px) { #volume-control { top: 104px; left: 24px; } }
-        
-        .player-ctrl-btn { color: #c084fc; font-size: 14px; background: none; border: 0; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
-        .player-ctrl-btn:hover { color: #fff; transform: scale(1.15); }
-        
-        #vol-btn { color: #c084fc; font-size: 16px; width: 22px; background: none; border: 0; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
+
+        #cover-wrap {
+            position: relative; width: 48px; height: 48px; border-radius: 10px; overflow: hidden;
+            border: 1px solid rgba(168, 85, 247, 0.4); box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+            flex-shrink: 0; background: linear-gradient(135deg, rgba(30, 10, 50, 0.8), rgba(10, 0, 20, 0.8));
+        }
+        @media (min-width: 768px) { #cover-wrap { width: 56px; height: 56px; border-radius: 12px; } }
+        #track-cover { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; }
+        #track-cover.loaded { opacity: 1; }
+        #cover-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(192, 132, 252, 0.8); font-size: 18px; }
+        #cover-fallback.hidden { display: none; }
+
+        .track-info { display: flex; flex-direction: column; min-width: 0; max-width: 100px; }
+        @media (min-width: 768px) { .track-info { max-width: 160px; } }
+        #now-playing {
+            display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.05em; color: #fff; margin-bottom: 2px;
+        }
+        #now-artist {
+            display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em;
+            color: rgba(192, 132, 252, 0.7);
+        }
+
+        .player-ctrl-btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border-radius: 50%; color: #e9d5ff;
+            background: rgba(168, 85, 247, 0.1); border: 1px solid transparent;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .player-ctrl-btn:hover { color: #fff; background: rgba(168, 85, 247, 0.3); border-color: rgba(168, 85, 247, 0.5); transform: scale(1.1); }
+        #play-pause-btn {
+            width: 36px; height: 36px; background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); font-size: 13px;
+        }
+        #play-pause-btn:hover { background: linear-gradient(135deg, #c084fc, #818cf8); box-shadow: 0 0 25px rgba(168, 85, 247, 0.7); transform: scale(1.05); }
+
+        .volume-section { display: none; align-items: center; gap: 8px; }
+        @media (min-width: 768px) { .volume-section { display: flex; } }
+
+        #vol-btn { color: #c084fc; font-size: 15px; width: 22px; background: none; border: 0; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
         #vol-btn:hover { color: #fff; transform: scale(1.15); }
         #vol-slider {
-            -webkit-appearance: none; appearance: none; width: 90px; height: 4px; border-radius: 999px;
+            -webkit-appearance: none; appearance: none; width: 80px; height: 4px; border-radius: 999px;
             background: linear-gradient(to right, #a855f7 var(--fill, 100%), rgba(168, 85, 247, 0.2) var(--fill, 100%));
             outline: none; cursor: pointer;
         }
-        @media (min-width: 768px) { #vol-slider { width: 130px; } }
+        @media (min-width: 1024px) { #vol-slider { width: 110px; } }
         #vol-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
-            background: #fff; box-shadow: 0 0 10px #a855f7; border: 0;
+            -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+            background: #fff; box-shadow: 0 0 8px #a855f7; border: 0; transition: transform 0.2s;
         }
-        #vol-slider::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px #a855f7; border: 0; }
-        #now-playing {
-            display: block; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-            font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(216, 180, 254, 0.6);
+        #vol-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        #vol-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px #a855f7; border: 0; }
+
+        /* === CANLI ZİYARETÇİ SAYACI === */
+        #visitor-counter {
+            position: fixed; bottom: 24px; right: 24px; z-index: 80;
+            display: flex; align-items: center; gap: 10px; padding: 10px 18px;
+            background: rgba(15, 5, 25, 0.75); backdrop-filter: blur(15px);
+            border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.15);
+            opacity: 0; transform: translateY(20px); transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
         }
+        body.entered #visitor-counter { opacity: 1; transform: translateY(0); pointer-events: auto; transition-delay: 1.5s; }
+        .live-dot {
+            width: 8px; height: 8px; background-color: #10b981; border-radius: 50%;
+            box-shadow: 0 0 10px #10b981; animation: pulse-dot 1.5s infinite;
+        }
+        @keyframes pulse-dot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        #visitor-count { font-family: 'Syncopate', sans-serif; font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 1px; transition: color 0.3s ease; }
+        .visitor-text { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(192, 132, 252, 0.7); }
+        @media (max-width: 768px) {
+            #visitor-counter { bottom: 16px; right: 16px; padding: 8px 14px; }
+            #visitor-count { font-size: 12px; } .visitor-text { font-size: 8px; }
+        }
+
+        /* === RADYO KARTLARI === */
+        .radio-card {
+            display: flex; align-items: center; gap: 16px; padding: 16px 20px;
+            background: rgba(15, 5, 25, 0.6); backdrop-filter: blur(15px);
+            border: 1px solid rgba(168, 85, 247, 0.15); border-radius: 16px;
+            transition: all 0.3s ease; cursor: pointer; text-decoration: none; color: inherit;
+        }
+        .radio-card:hover { border-color: rgba(168, 85, 247, 0.5); background: rgba(168, 85, 247, 0.08); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(168, 85, 247, 0.15); }
+        .radio-card.playing { border-color: #a855f7; background: rgba(168, 85, 247, 0.12); box-shadow: 0 0 25px rgba(168, 85, 247, 0.3); }
+        .radio-icon {
+            width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.2));
+            color: #c084fc; flex-shrink: 0; overflow: hidden;
+        }
+        .radio-icon img { width: 100%; height: 100%; object-fit: contain; background: #fff; padding: 4px; border-radius: 8px;}
+        .radio-card.playing .radio-icon { background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff; animation: pulseGlow 2s infinite; }
+        .radio-info h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+        .radio-info span { font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(192, 132, 252, 0.6); }
+        .radio-status-icon { margin-left: auto; color: rgba(168, 85, 247, 0.4); font-size: 18px; transition: all 0.3s ease; }
+        .radio-card:hover .radio-status-icon { color: #a855f7; }
+        .radio-card.playing .radio-status-icon { color: #a855f7; }
 
         .eq { display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 48px; margin-top: 3rem; }
         .eq span {
@@ -248,25 +276,19 @@
 
         #scroll-progress {
             position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 70;
-            background: linear-gradient(90deg, #a855f7, #6366f1, #22d3ee);
-            box-shadow: 0 0 12px #a855f7;
+            background: linear-gradient(90deg, #a855f7, #6366f1, #22d3ee); box-shadow: 0 0 12px #a855f7;
         }
 
         .shimmer-text {
             background: linear-gradient(110deg, #ffffff 20%, #c084fc 40%, #ffffff 60%);
-            background-size: 200% 100%;
-            -webkit-background-clip: text; background-clip: text;
+            background-size: 200% 100%; -webkit-background-clip: text; background-clip: text;
             -webkit-text-fill-color: transparent; color: transparent;
-            filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.55));
-            animation: shimmer 5s linear infinite;
+            filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.55)); animation: shimmer 5s linear infinite;
         }
         @keyframes shimmer { to { background-position: -200% 0; } }
 
         .pulse-glow { animation: pulseGlow 2.5s ease-in-out infinite; }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(255, 85, 0, 0.35); }
-            50% { box-shadow: 0 0 35px rgba(255, 85, 0, 0.7); }
-        }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(255, 85, 0, 0.35); } 50% { box-shadow: 0 0 35px rgba(255, 85, 0, 0.7); } }
 
         .marquee {
             overflow: hidden; white-space: nowrap; padding: 14px 0;
@@ -308,17 +330,37 @@
         </div>
     </div>
 
+    <!-- === PLAYER === -->
     <div id="volume-control">
-        <button id="prev-btn" class="player-ctrl-btn" aria-label="Önceki şarkı"><i class="fas fa-backward-step"></i></button>
-        <button id="play-pause-btn" class="player-ctrl-btn" aria-label="Oynat / Durdur"><i class="fas fa-play"></i></button>
-        <button id="next-btn" class="player-ctrl-btn" aria-label="Sonraki şarkı"><i class="fas fa-forward-step"></i></button>
-        <div class="h-4 w-[1px] bg-purple-500/20 mx-1"></div>
-        <button id="vol-btn" aria-label="Sesi aç / kapat"><i class="fas fa-volume-high"></i></button>
-        <div class="flex flex-col gap-2">
-            <input id="vol-slider" type="range" min="0" max="100" value="10" aria-label="Ses seviyesi">
-            <span id="now-playing">Şimdi çalıyor</span>
+        <div id="cover-wrap">
+            <img id="track-cover" src="" alt="">
+            <div id="cover-fallback"><i class="fas fa-music"></i></div>
         </div>
-        <span id="vol-value" class="text-[10px] font-bold text-purple-300 w-7 text-right">10</span>
+        <div class="track-info">
+            <span id="now-playing">Şimdi çalıyor</span>
+            <span id="now-artist">Zesu</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="prev-btn" class="player-ctrl-btn" aria-label="Önceki"><i class="fas fa-backward-step text-[11px]"></i></button>
+            <button id="play-pause-btn" class="player-ctrl-btn" aria-label="Oynat / Durdur"><i class="fas fa-play"></i></button>
+            <button id="next-btn" class="player-ctrl-btn" aria-label="Sonraki"><i class="fas fa-forward-step text-[11px]"></i></button>
+        </div>
+        <div class="volume-section">
+            <div class="h-6 w-[1px] bg-purple-500/20 mx-1"></div>
+            <button id="vol-btn" aria-label="Sesi aç / kapat"><i class="fas fa-volume-high"></i></button>
+            <input id="vol-slider" type="range" min="0" max="100" value="10" aria-label="Ses seviyesi">
+            <span id="vol-value" class="text-[10px] font-bold text-purple-300 w-6 text-right">10</span>
+        </div>
+    </div>
+
+    <!-- === CANLI ZİYARETÇİ SAYACI === -->
+    <div id="visitor-counter">
+        <div class="live-dot"></div>
+        <div class="flex flex-col">
+            <span id="visitor-count">1,248</span>
+            <span class="visitor-text">CANLI ZİYARETÇİ</span>
+        </div>
+        <i class="fas fa-eye text-purple-400/50 ml-1 text-sm"></i>
     </div>
 
     <div class="orb orb-1"></div>
@@ -340,11 +382,12 @@
                 <img src="shared/images/siteicon.png" alt="Zesu Logo" class="brand-avatar" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Zesu&top=flower&backgroundColor=a855f7'">
                 <h1 class="text-lg md:text-2xl font-bold tracking-widest text-white group-hover:text-purple-400 transition-colors uppercase text-left">ZESU</h1>
             </button>
-            <div class="flex items-center space-x-4 md:space-x-10 text-[9px] md:text-xs font-bold uppercase tracking-[0.1em] md:tracking-[0.2em]">
+            <div class="flex items-center space-x-4 md:space-x-8 text-[9px] md:text-xs font-bold uppercase tracking-[0.1em] md:tracking-[0.15em]">
                 <button onclick="scrollToTop()" class="nav-link text-purple-200">ANA SAYFA</button>
                 <a href="#about" onclick="showPage('home')" class="nav-link text-purple-200">Hakkımda</a>
                 <a href="#music" onclick="showPage('home')" class="nav-link text-purple-200">Portfolyo</a>
                 <button onclick="showPage('midi')" class="nav-link text-purple-200">MIDI</button>
+                <button onclick="showPage('radio')" class="nav-link text-purple-200">RADYO</button>
             </div>
         </div>
     </nav>
@@ -390,7 +433,6 @@
                         <h4 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-wider mb-2">Zesu</h4>
                         <div class="experience-tag text-base md:text-lg mb-4 md:mb-6 uppercase tracking-widest">4 Yıllık Deneyim</div>
                         <p class="text-purple-200/70 leading-relaxed font-light mb-8 text-sm md:text-base">SoundCloud platformunda 4 yıldır ses tasarımı ve prodüksiyon süreçlerini yönetiyorum. Atmosferik tonlar ve deneysel melodiler üzerine odaklanıyorum.</p>
-
                         <div class="flex gap-4 md:gap-6">
                             <div class="text-center"><span class="block text-xl md:text-2xl font-bold text-white" data-count="4" data-suffix="+">0+</span><span class="text-[8px] md:text-[10px] text-purple-500 uppercase tracking-tighter">Yıl</span></div>
                             <div class="w-[1px] bg-purple-500/20"></div>
@@ -406,7 +448,6 @@
                                 <div><h5 class="text-lg md:text-xl font-bold text-purple-300 uppercase tracking-widest">PRODÜKTÖR</h5><span class="text-[10px] md:text-xs text-purple-500/60 uppercase">2022 - GÜNÜMÜZ</span></div>
                                 <i class="fas fa-compact-disc text-2xl md:text-3xl text-purple-500/30 group-hover:rotate-180 transition-transform duration-1000"></i>
                             </div>
-
                             <div class="mb-8">
                                 <h6 class="text-[9px] uppercase tracking-[0.3em] text-purple-500/80 mb-4 font-bold">Kullandığım Uygulamalar</h6>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -437,7 +478,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="space-y-6 mb-8">
                                 <div>
                                     <div class="flex justify-between text-[8px] md:text-[10px] uppercase tracking-widest mb-1"><span>Prodüksiyon Hızı</span><span>%95</span></div>
@@ -448,20 +488,10 @@
                                     <div class="h-1 bg-purple-900/30 rounded-full overflow-hidden"><div class="h-full bg-purple-500 w-[54%]"></div></div>
                                 </div>
                             </div>
-
                             <div class="social-container mt-auto">
-                                <a href="https://www.instagram.com/m.efecan011/" target="_blank" class="social-link instagram">
-                                    <i class="fab fa-instagram"></i>
-                                    <span>Instagram</span>
-                                </a>
-                                <a href="https://www.roblox.com/users/1140047458/profile" target="_blank" class="social-link roblox">
-                                    <span class="roblox-icon"></span>
-                                    <span>Roblox</span>
-                                </a>
-                                <a href="https://soundcloud.com/zesudev" target="_blank" class="social-link soundcloud">
-                                    <i class="fab fa-soundcloud"></i>
-                                    <span>SoundCloud</span>
-                                </a>
+                                <a href="https://www.instagram.com/m.efecan011/" target="_blank" class="social-link instagram"><i class="fab fa-instagram"></i><span>Instagram</span></a>
+                                <a href="https://www.roblox.com/users/1140047458/profile" target="_blank" class="social-link roblox"><span class="roblox-icon"></span><span>Roblox</span></a>
+                                <a href="https://soundcloud.com/zesudev" target="_blank" class="social-link soundcloud"><i class="fab fa-soundcloud"></i><span>SoundCloud</span></a>
                             </div>
                         </div>
                     </div>
@@ -489,7 +519,6 @@
         <div class="max-w-3xl mx-auto text-center">
             <h2 class="text-4xl md:text-6xl font-bold mb-6 purple-glow tracking-tighter uppercase">MP3 TO MIDI</h2>
             <p class="text-purple-300/60 mb-12 font-light tracking-widest uppercase text-xs">Yapay zeka ile sesi dijital notaya dönüştür.</p>
-
             <div class="glass-card p-12 border-dashed border-2 border-purple-500/20 relative overflow-hidden">
                 <div id="upload-stage">
                     <div class="group cursor-pointer flex flex-col items-center justify-center space-y-6" onclick="document.getElementById('fileInput').click()">
@@ -503,7 +532,6 @@
                         <input type="file" id="fileInput" class="hidden" accept="audio/*" onchange="handleFileSelect(event)">
                     </div>
                 </div>
-
                 <div id="processing-stage" class="hidden py-10">
                     <div class="flex flex-col items-center space-y-8">
                         <div class="relative w-24 h-24">
@@ -521,7 +549,6 @@
                         <p id="status-text" class="text-purple-200 text-xs font-bold uppercase tracking-[0.3em]">AI Modeli Başlatılıyor...</p>
                     </div>
                 </div>
-
                 <div id="result-stage" class="hidden">
                     <div class="flex flex-col items-center space-y-6">
                         <div class="w-20 h-20 bg-green-500/20 border border-green-500/50 rounded-full flex items-center justify-center text-green-500 text-3xl animate-pulse">
@@ -538,6 +565,79 @@
         </div>
     </main>
 
+    <!-- === RADYO SAYFASI === -->
+    <main id="radio-page" class="page-content pt-24 md:pt-32 pb-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-6xl font-bold mb-6 purple-glow tracking-tighter uppercase">RADYO</h2>
+            <p class="text-purple-300/60 mb-4 font-light tracking-widest uppercase text-xs">Türkiye'nin En Popüler Radyoları</p>
+            <p class="text-purple-400/30 mb-12 text-[10px] uppercase tracking-[0.2em]">Kesintisiz Canlı Yayın</p>
+
+            <audio id="radio-audio" preload="none"></audio>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-left">
+                <!-- PowerTürk -->
+                <div class="radio-card" data-stream="https://listen.powerapp.com.tr/powerturk/abr/playlist.m3u8" data-name="PowerTürk" data-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/PowerT%C3%BCrk_logo.svg/512px-PowerT%C3%BCrk_logo.svg.png">
+                    <div class="radio-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="radio-info"><h4>PowerTürk</h4><span>Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <!-- Süper FM -->
+                <div class="radio-card" data-stream="http://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM.mp3" data-name="Süper FM" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/5/5e/S%C3%BCper_FM_logo.png/512px-S%C3%BCper_FM_logo.png">
+                    <div class="radio-icon"><i class="fas fa-star"></i></div>
+                    <div class="radio-info"><h4>Süper FM</h4><span>Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <!-- JoyTürk -->
+                <div class="radio-card" data-stream="https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK.mp3" data-name="JoyTürk" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/5/5e/JoyT%C3%BCrk_logo.png/512px-JoyT%C3%BCrk_logo.png">
+                    <div class="radio-icon"><i class="fas fa-heart"></i></div>
+                    <div class="radio-info"><h4>JoyTürk</h4><span>Slow/Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <!-- Slow Türk -->
+                <div class="radio-card" data-stream="https://radyo.duhnet.tv/slowturk" data-name="Slow Türk" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/0/0e/Slow_T%C3%BCrk_logo.png/512px-Slow_T%C3%BCrk_logo.png">
+                    <div class="radio-icon"><i class="fas fa-clock"></i></div>
+                    <div class="radio-info"><h4>Slow Türk</h4><span>Slow</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <!-- Radyo 7 -->
+                <div class="radio-card" data-stream="https://moondigitaledge.radyotvonline.net/radyo7/abr/playlist.m3u8" data-name="Radyo 7" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/0/0e/Radyo7_logo.png/512px-Radyo7_logo.png">
+                    <div class="radio-icon"><i class="fas fa-broadcast-tower"></i></div>
+                    <div class="radio-info"><h4>Radyo 7</h4><span>Türkçe Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <!-- Virgin Radio -->
+                <div class="radio-card" data-stream="http://29073.live.streamtheworld.com/VIRGIN_RADIO_SC" data-name="Virgin Radio" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/0/0e/Virgin_Radio_T%C3%BCrkiye_logo.png/512px-Virgin_Radio_T%C3%BCrkiye_logo.png">
+                    <div class="radio-icon"><i class="fas fa-compact-disc"></i></div>
+                    <div class="radio-info"><h4>Virgin Radio</h4><span>Pop/Rap</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <!-- Fenomen -->
+                <div class="radio-card" data-stream="https://live.radyofenomen.com/fenomen/256/chunks.m3u8" data-name="Fenomen" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/0/0e/Radyo_Fenomen_logo.png/512px-Radyo_Fenomen_logo.png">
+                    <div class="radio-icon"><i class="fas fa-fire"></i></div>
+                    <div class="radio-info"><h4>Fenomen</h4><span>Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <!-- Kral Pop -->
+                <div class="radio-card" data-stream="http://0ajuu84p.rocketcdn.com/kralpop_240/chunklist.m3u8" data-name="Kral Pop" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/0/0e/Kral_pop_logo.png/512px-Kral_pop_logo.png">
+                    <div class="radio-icon"><i class="fas fa-crown"></i></div>
+                    <div class="radio-info"><h4>Kral Pop</h4><span>Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+            </div>
+
+            <div id="radio-status" class="mt-8 text-purple-400/50 text-xs uppercase tracking-[0.2em]">
+                <i class="fas fa-info-circle mr-1"></i> Çalmak için bir radyo seçin
+            </div>
+        </div>
+    </main>
+
     <footer class="py-16 md:py-24 bg-black/60 border-t border-purple-900/20 px-6">
         <div class="max-w-4xl mx-auto flex flex-col items-center">
             <div class="flex items-center gap-6 mb-8">
@@ -550,6 +650,7 @@
     </footer>
 
     <script>
+        // === SAYFA GEÇİŞİ ===
         function showPage(pageId) {
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(pageId + '-page');
@@ -557,9 +658,15 @@
                 target.classList.add('active');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+            
+            // Radyo sayfasına geçince SoundCloud'u durdur
+            if (pageId === 'radio' && widgetReady) {
+                widget.pause();
+            }
         }
         function scrollToTop() { showPage('home'); }
 
+        // === SOUNDCLOUD PLAYER ===
         const iframeElement = document.getElementById('sc-player');
         const widget = SC.Widget(iframeElement);
         const enterScreen = document.getElementById('enter-screen');
@@ -567,7 +674,9 @@
         const volBtn = document.getElementById('vol-btn');
         const volValue = document.getElementById('vol-value');
         const nowPlaying = document.getElementById('now-playing');
-        
+        const nowArtist = document.getElementById('now-artist');
+        const trackCover = document.getElementById('track-cover');
+        const coverFallback = document.getElementById('cover-fallback');
         const prevBtn = document.getElementById('prev-btn');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const nextBtn = document.getElementById('next-btn');
@@ -576,7 +685,7 @@
         let lastVolume = 60;
         let widgetReady = false;
         let entered = false;
-        let isPlaying = false;
+        let isRadioMode = false; // Radyo modunda mıyız?
 
         function applyVolume(v) {
             volume = v;
@@ -586,12 +695,37 @@
             volValue.textContent = v;
             const icon = v === 0 ? 'fa-volume-xmark' : v < 50 ? 'fa-volume-low' : 'fa-volume-high';
             volBtn.innerHTML = '<i class="fas ' + icon + '"></i>';
-            if (widgetReady) widget.setVolume(v);
+            
+            if (isRadioMode) {
+                radioAudio.volume = v / 100;
+            } else if (widgetReady) {
+                widget.setVolume(v);
+            }
         }
 
         function updateTitle() {
+            if (isRadioMode) return;
             widget.getCurrentSound(sound => {
-                if (sound && sound.title) nowPlaying.textContent = sound.title;
+                if (!sound) return;
+                const title = sound.title || 'Bilinmeyen Şarkı';
+                const artist = (sound.user && sound.user.username) ? sound.user.username : 'Zesu';
+                const artwork = sound.artwork_url || (sound.user && sound.user.avatar_url) || '';
+                nowPlaying.textContent = title;
+                nowArtist.textContent = artist;
+                if (artwork) {
+                    const bigArt = artwork.replace('-large', '-t500x500');
+                    trackCover.onload = () => { trackCover.classList.add('loaded'); coverFallback.classList.add('hidden'); };
+                    trackCover.onerror = () => {
+                        if (trackCover.src !== artwork) { trackCover.src = artwork; }
+                        else { trackCover.classList.remove('loaded'); coverFallback.classList.remove('hidden'); }
+                    };
+                    trackCover.classList.remove('loaded');
+                    coverFallback.classList.remove('hidden');
+                    trackCover.src = bigArt;
+                } else {
+                    trackCover.classList.remove('loaded');
+                    coverFallback.classList.remove('hidden');
+                }
             });
         }
 
@@ -605,45 +739,188 @@
             if (widgetReady) {
                 widget.setVolume(volume);
                 widget.play();
+                setTimeout(updateTitle, 500);
+            }
+        }
+
+        // İleri / Geri butonları (Moda göre çalışır)
+        function handlePrev() {
+            if (isRadioMode) {
+                console.log("Canlı radyoda geri sarılamaz.");
+            } else if (widgetReady) {
+                widget.prev();
+                setTimeout(updateTitle, 400);
+            }
+        }
+        function handleNext() {
+            if (isRadioMode) {
+                 console.log("Canlı radyoda ileri sarılamaz.");
+            } else if (widgetReady) {
+                widget.next();
+                setTimeout(updateTitle, 400);
+            }
+        }
+        function handlePlayPause() {
+            if (isRadioMode) {
+                if (radioAudio.paused) { radioAudio.play(); }
+                else { radioAudio.pause(); }
+            } else if (widgetReady) {
+                widget.toggle();
             }
         }
 
         applyVolume(volume);
-
         volSlider.addEventListener('input', e => applyVolume(parseInt(e.target.value, 10)));
         volBtn.addEventListener('click', () => applyVolume(volume === 0 ? lastVolume : 0));
-        
-        prevBtn.addEventListener('click', () => { if (widgetReady) widget.prev(); });
-        nextBtn.addEventListener('click', () => { if (widgetReady) widget.next(); });
-        playPauseBtn.addEventListener('click', () => {
-            if (widgetReady) widget.toggle();
-        });
-
+        prevBtn.addEventListener('click', handlePrev);
+        nextBtn.addEventListener('click', handleNext);
+        playPauseBtn.addEventListener('click', handlePlayPause);
         enterScreen.addEventListener('click', enterSite);
         document.addEventListener('keydown', e => {
-            if (!entered && (e.key === 'Enter' || e.key === ' ')) {
-                e.preventDefault();
-                enterSite();
-            }
+            if (!entered && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); enterSite(); }
         });
 
         widget.bind(SC.Widget.Events.READY, () => {
             widgetReady = true;
             widget.setVolume(volume);
+            setTimeout(updateTitle, 500);
             if (entered) widget.play();
         });
         widget.bind(SC.Widget.Events.PLAY, () => {
-            isPlaying = true;
+            if (isRadioMode) return; // Radyo çalıyorsa SoundCloud event'ini yoksay
             document.body.classList.add('playing');
             playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
             updateTitle();
         });
         widget.bind(SC.Widget.Events.PAUSE, () => {
-            isPlaying = false;
+            if (isRadioMode) return;
             document.body.classList.remove('playing');
             playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
         });
 
+        // === RADYO MANTIĞI (HLS Destekli) ===
+        const radioAudio = document.getElementById('radio-audio');
+        const radioStatus = document.getElementById('radio-status');
+        let currentRadioCard = null;
+        let hls = null; // HLS instance
+
+        function updatePlayerToRadio(name, logoUrl) {
+            isRadioMode = true;
+            nowPlaying.textContent = name;
+            nowArtist.textContent = 'CANLI YAYIN';
+            if (logoUrl) {
+                trackCover.onload = () => { trackCover.classList.add('loaded'); coverFallback.classList.add('hidden'); };
+                trackCover.onerror = () => { trackCover.classList.remove('loaded'); coverFallback.classList.remove('hidden'); };
+                trackCover.classList.remove('loaded');
+                coverFallback.classList.remove('hidden');
+                trackCover.src = logoUrl;
+            } else {
+                trackCover.classList.remove('loaded');
+                coverFallback.classList.remove('hidden');
+                coverFallback.innerHTML = '<i class="fas fa-broadcast-tower"></i>';
+            }
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            document.body.classList.add('playing');
+            radioAudio.volume = volume / 100;
+        }
+
+        function resetPlayerToSoundCloud() {
+            isRadioMode = false;
+            coverFallback.innerHTML = '<i class="fas fa-music"></i>';
+            document.body.classList.remove('playing');
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            if (hls) { hls.destroy(); hls = null; } // HLS'i temizle
+            radioAudio.src = ''; // Radyo kaynağını temizle
+            if (widgetReady) {
+                updateTitle();
+                widget.setVolume(volume);
+            } else {
+                nowPlaying.textContent = 'Şimdi çalıyor';
+                nowArtist.textContent = 'Zesu';
+            }
+        }
+
+        document.querySelectorAll('.radio-card[data-stream]').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const streamUrl = this.dataset.stream;
+                const name = this.dataset.name;
+                const logo = this.dataset.logo;
+
+                // Aynı radyoya tıklandıysa durdur
+                if (currentRadioCard === this && !radioAudio.paused) {
+                    radioAudio.pause();
+                    this.classList.remove('playing');
+                    this.querySelector('.radio-status-icon').className = 'fas fa-play-circle radio-status-icon';
+                    radioStatus.innerHTML = '<i class="fas fa-info-circle mr-1"></i> Çalmak için bir radyo seçin';
+                    currentRadioCard = null;
+                    resetPlayerToSoundCloud();
+                    return;
+                }
+
+                // Önceki radyoyu temizle
+                if (currentRadioCard) {
+                    currentRadioCard.classList.remove('playing');
+                    currentRadioCard.querySelector('.radio-status-icon').className = 'fas fa-play-circle radio-status-icon';
+                }
+                if (hls) { hls.destroy(); hls = null; }
+
+                // Yeni radyoyu başlat
+                radioAudio.src = streamUrl;
+                radioAudio.play().then(() => {
+                    this.classList.add('playing');
+                    this.querySelector('.radio-status-icon').className = 'fas fa-pause-circle radio-status-icon';
+                    radioStatus.innerHTML = `<i class="fas fa-broadcast-tower mr-1 text-purple-400"></i> Şu an çalıyor: <span class="text-purple-200 font-bold">${name}</span>`;
+                    currentRadioCard = this;
+                    updatePlayerToRadio(name, logo);
+                }).catch(err => {
+                    // Eğer HLS (.m3u8) ise ve tarayıcı desteklemiyorsa HLS.js devreye girsin
+                    if (streamUrl.includes('.m3u8') && Hls.isSupported()) {
+                        hls = new Hls();
+                        hls.loadSource(streamUrl);
+                        hls.attachMedia(radioAudio);
+                        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                            radioAudio.play();
+                            this.classList.add('playing');
+                            this.querySelector('.radio-status-icon').className = 'fas fa-pause-circle radio-status-icon';
+                            radioStatus.innerHTML = `<i class="fas fa-broadcast-tower mr-1 text-purple-400"></i> Şu an çalıyor: <span class="text-purple-200 font-bold">${name}</span>`;
+                            currentRadioCard = this;
+                            updatePlayerToRadio(name, logo);
+                        }.bind(this));
+                        hls.on(Hls.Events.ERROR, function (event, data) {
+                            if (data.fatal) {
+                                radioStatus.innerHTML = '<i class="fas fa-exclamation-triangle mr-1 text-red-400"></i> Yayın yüklenemedi (HLS Hatası).';
+                                resetPlayerToSoundCloud();
+                            }
+                        });
+                    } else {
+                        radioStatus.innerHTML = '<i class="fas fa-exclamation-triangle mr-1 text-red-400"></i> Yayın yüklenemedi veya format desteklenmiyor.';
+                        resetPlayerToSoundCloud();
+                    }
+                });
+            });
+        });
+
+        // === ZİYARETÇİ SAYACI ===
+        const visitorCountEl = document.getElementById('visitor-count');
+        let currentVisitors = 1248;
+        function updateVisitorCount() {
+            const change = Math.floor(Math.random() * 5) - 1;
+            currentVisitors += change;
+            visitorCountEl.textContent = currentVisitors.toLocaleString('en-US');
+            if (change > 0) {
+                visitorCountEl.style.color = '#10b981';
+                setTimeout(() => visitorCountEl.style.color = '#fff', 800);
+            } else if (change < 0) {
+                visitorCountEl.style.color = '#ef4444';
+                setTimeout(() => visitorCountEl.style.color = '#fff', 800);
+            }
+            const nextUpdate = Math.floor(Math.random() * 4000) + 2000;
+            setTimeout(updateVisitorCount, nextUpdate);
+        }
+        setTimeout(updateVisitorCount, 3000);
+
+        // === EQ BARS ===
         const eq = document.getElementById('eq');
         for (let i = 0; i < 32; i++) {
             const bar = document.createElement('span');
@@ -652,6 +929,7 @@
             eq.appendChild(bar);
         }
 
+        // === CURSOR GLOW ===
         const glow = document.getElementById('cursor-glow');
         if (window.matchMedia('(hover: hover)').matches) {
             window.addEventListener('mousemove', e => {
@@ -659,12 +937,10 @@
             }, { passive: true });
         }
 
+        // === REVEAL ANIMATION ===
         const revealObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    revealObserver.unobserve(entry.target);
-                }
+                if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); }
             });
         }, { threshold: 0.15 });
         document.querySelectorAll('#about > div > *, #music > div > *').forEach(el => {
@@ -672,25 +948,25 @@
             revealObserver.observe(el);
         });
 
+        // === MARQUEE ===
         const marqueeTrack = document.getElementById('marquee-track');
         const marqueeWords = ['ATMOSFERİK', 'DENEYSEL', 'SES TASARIMI', 'PRODÜKSİYON', 'FL STUDIO', 'SOUNDCLOUD'];
         for (let r = 0; r < 4; r++) {
             marqueeWords.forEach(word => {
-                const text = document.createElement('span');
-                text.textContent = word;
-                const icon = document.createElement('i');
-                icon.className = 'fas fa-bolt';
-                marqueeTrack.appendChild(text);
-                marqueeTrack.appendChild(icon);
+                const text = document.createElement('span'); text.textContent = word;
+                const icon = document.createElement('i'); icon.className = 'fas fa-bolt';
+                marqueeTrack.appendChild(text); marqueeTrack.appendChild(icon);
             });
         }
 
+        // === SCROLL PROGRESS ===
         const progressBar = document.getElementById('scroll-progress');
         window.addEventListener('scroll', () => {
             const max = document.documentElement.scrollHeight - window.innerHeight;
             progressBar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
         }, { passive: true });
 
+        // === COUNTERS ===
         const counterObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
@@ -709,6 +985,7 @@
         }, { threshold: 0.5 });
         document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
 
+        // === CARD SPOTLIGHT ===
         const canHover = window.matchMedia('(hover: hover)').matches;
         document.querySelectorAll('.glass-card').forEach(card => {
             card.classList.add('spot');
@@ -728,6 +1005,7 @@
             card.addEventListener('mouseleave', () => { card.style.transform = ''; });
         });
 
+        // === MIDI CONVERTER ===
         const model = new mm.OnsetsAndFrames('https://storage.googleapis.com/magentadata/js/checkpoints/transcription/onsets_frames_uni');
         let currentMidiBlob = null;
         let selectedFileName = "";
@@ -735,56 +1013,42 @@
         async function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             selectedFileName = file.name.split('.').slice(0, -1).join('.') + ".mid";
             const uploadStage = document.getElementById('upload-stage');
             const procStage = document.getElementById('processing-stage');
             const statusText = document.getElementById('status-text');
             const progressBar = document.getElementById('progress');
-
             uploadStage.classList.add('hidden');
             procStage.classList.remove('hidden');
-
             try {
                 statusText.innerText = "Yapay Zeka Motoru Hazırlanıyor...";
                 progressBar.style.width = '20%';
-                if (!model.isInitialized()) {
-                    await model.initialize();
-                }
-
+                if (!model.isInitialized()) await model.initialize();
                 statusText.innerText = "Ses Dosyası Okunuyor...";
                 progressBar.style.width = '40%';
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const arrayBuffer = await file.arrayBuffer();
                 const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
                 statusText.innerText = "Notalar Ayrıştırılıyor (Bu işlem uzun sürebilir)...";
                 progressBar.style.width = '70%';
                 const ns = await model.transcribeFromAudioBuffer(audioBuffer);
-
                 statusText.innerText = "MIDI Dosyası Oluşturuluyor...";
                 progressBar.style.width = '90%';
                 const midiData = mm.sequenceProtoToMidi(ns);
                 currentMidiBlob = new Blob([midiData], { type: 'audio/midi' });
-
                 progressBar.style.width = '100%';
                 setTimeout(() => {
                     procStage.classList.add('hidden');
                     document.getElementById('result-stage').classList.remove('hidden');
-
                     const downloadBtn = document.getElementById('downloadBtn');
                     downloadBtn.onclick = () => {
                         const url = window.URL.createObjectURL(currentMidiBlob);
                         const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = url;
-                        a.download = selectedFileName;
-                        document.body.appendChild(a);
-                        a.click();
+                        a.style.display = 'none'; a.href = url; a.download = selectedFileName;
+                        document.body.appendChild(a); a.click();
                         window.URL.revokeObjectURL(url);
                     };
                 }, 500);
-
             } catch (err) {
                 console.error(err);
                 statusText.innerText = "Hata Oluştu! Lütfen Sayfayı Yenileyin.";
