@@ -229,9 +229,14 @@
             background: rgba(15, 5, 25, 0.6); backdrop-filter: blur(15px);
             border: 1px solid rgba(168, 85, 247, 0.15); border-radius: 16px;
             transition: all 0.3s ease; cursor: pointer; text-decoration: none; color: inherit;
+            position: relative;
         }
         .radio-card:hover { border-color: rgba(168, 85, 247, 0.5); background: rgba(168, 85, 247, 0.08); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(168, 85, 247, 0.15); }
         .radio-card.playing { border-color: #a855f7; background: rgba(168, 85, 247, 0.12); box-shadow: 0 0 25px rgba(168, 85, 247, 0.3); }
+        .radio-card.disabled {
+            opacity: 0.55; cursor: not-allowed; filter: grayscale(0.6);
+        }
+        .radio-card.disabled:hover { transform: none; border-color: rgba(168, 85, 247, 0.15); background: rgba(15, 5, 25, 0.6); box-shadow: none; }
         .radio-icon {
             width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
             font-size: 20px; background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.2));
@@ -244,6 +249,20 @@
         .radio-status-icon { margin-left: auto; color: rgba(168, 85, 247, 0.4); font-size: 18px; transition: all 0.3s ease; }
         .radio-card:hover .radio-status-icon { color: #a855f7; }
         .radio-card.playing .radio-status-icon { color: #a855f7; }
+
+        /* YAKINDA etiketi */
+        .coming-soon-badge {
+            position: absolute; top: -10px; right: -8px; z-index: 5;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: #fff; font-size: 8px; font-weight: 800; letter-spacing: 0.12em;
+            padding: 4px 9px; border-radius: 999px; text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.6);
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 0 0 22px rgba(245, 158, 11, 0.95); }
+        }
 
         .eq { display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 48px; margin-top: 3rem; }
         .eq span {
@@ -357,7 +376,7 @@
     <div id="visitor-counter">
         <div class="live-dot"></div>
         <div class="flex flex-col">
-            <span id="visitor-count">1,248</span>
+            <span id="visitor-count">1,238</span>
             <span class="visitor-text">CANLI ZİYARETÇİ</span>
         </div>
         <i class="fas fa-eye text-purple-400/50 ml-1 text-sm"></i>
@@ -603,13 +622,6 @@
                     <i class="fas fa-play-circle radio-status-icon"></i>
                 </div>
 
-                <!-- Radyo 7 -->
-                <div class="radio-card" data-stream="https://moondigitaledge.radyotvonline.net/radyo7/abr/playlist.m3u8" data-name="Radyo 7" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/0/0e/Radyo7_logo.png/512px-Radyo7_logo.png">
-                    <div class="radio-icon"><i class="fas fa-broadcast-tower"></i></div>
-                    <div class="radio-info"><h4>Radyo 7</h4><span>Türkçe Pop</span></div>
-                    <i class="fas fa-play-circle radio-status-icon"></i>
-                </div>
-
                 <!-- Virgin Radio -->
                 <div class="radio-card" data-stream="http://29073.live.streamtheworld.com/VIRGIN_RADIO_SC" data-name="Virgin Radio" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/0/0e/Virgin_Radio_T%C3%BCrkiye_logo.png/512px-Virgin_Radio_T%C3%BCrkiye_logo.png">
                     <div class="radio-icon"><i class="fas fa-compact-disc"></i></div>
@@ -624,11 +636,20 @@
                     <i class="fas fa-play-circle radio-status-icon"></i>
                 </div>
 
-                <!-- Kral Pop -->
-                <div class="radio-card" data-stream="http://0ajuu84p.rocketcdn.com/kralpop_240/chunklist.m3u8" data-name="Kral Pop" data-logo="https://upload.wikimedia.org/wikipedia/tr/thumb/0/0e/Kral_pop_logo.png/512px-Kral_pop_logo.png">
+                <!-- Radyo 7 (YAKINDA - DEVRE DIŞI) -->
+                <div class="radio-card disabled" data-name="Radyo 7" aria-disabled="true">
+                    <span class="coming-soon-badge">Yakında</span>
+                    <div class="radio-icon"><i class="fas fa-broadcast-tower"></i></div>
+                    <div class="radio-info"><h4>Radyo 7</h4><span>Türkçe Pop</span></div>
+                    <i class="fas fa-clock radio-status-icon"></i>
+                </div>
+
+                <!-- Kral Pop (YAKINDA - DEVRE DIŞI) -->
+                <div class="radio-card disabled" data-name="Kral Pop" aria-disabled="true">
+                    <span class="coming-soon-badge">Yakında</span>
                     <div class="radio-icon"><i class="fas fa-crown"></i></div>
                     <div class="radio-info"><h4>Kral Pop</h4><span>Pop</span></div>
-                    <i class="fas fa-play-circle radio-status-icon"></i>
+                    <i class="fas fa-clock radio-status-icon"></i>
                 </div>
             </div>
 
@@ -840,6 +861,7 @@
             }
         }
 
+        // Sadece aktif (data-stream olan) kartlara tıklama olayı ekle
         document.querySelectorAll('.radio-card[data-stream]').forEach(card => {
             card.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -901,12 +923,29 @@
             });
         });
 
-        // === ZİYARETÇİ SAYACI ===
+        // === ZİYARETÇİ SAYACI (maksimum 1238, gerçekçi dalgalanma) ===
         const visitorCountEl = document.getElementById('visitor-count');
-        let currentVisitors = 1248;
+        const MAX_VISITORS = 1238;
+        let currentVisitors = 1238;
         function updateVisitorCount() {
-            const change = Math.floor(Math.random() * 5) - 1;
+            // Çoğunlukla düşür, arada bir az da olsa artır ama asla 1238'i geçme
+            let change;
+            const r = Math.random();
+            if (r < 0.55) {
+                // %55 ihtimalle düşür (1-6 kişi)
+                change = -(Math.floor(Math.random() * 6) + 1);
+            } else if (r < 0.9) {
+                // %35 ihtimalle küçük artış (1-3 kişi)
+                change = Math.floor(Math.random() * 3) + 1;
+            } else {
+                // %10 ihtimalle değişme
+                change = 0;
+            }
             currentVisitors += change;
+            // Sınırları uygula
+            if (currentVisitors > MAX_VISITORS) currentVisitors = MAX_VISITORS;
+            if (currentVisitors < 1150) currentVisitors = 1150 + Math.floor(Math.random() * 15);
+
             visitorCountEl.textContent = currentVisitors.toLocaleString('en-US');
             if (change > 0) {
                 visitorCountEl.style.color = '#10b981';
