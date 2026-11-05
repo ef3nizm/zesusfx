@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zesu | Portfolio</title>
+    <title>Zesu AI | Portfolio & Studio</title>
     <link rel="icon" type="image/png" href="shared/images/siteicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.min.js"></script>
     <script src="https://w.soundcloud.com/player/api.js"></script>
     <style>
@@ -15,765 +15,121 @@
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #05010d;
+            background-color: #030008;
             color: #f5f3ff;
             margin: 0;
             overflow-x: hidden;
             width: 100%;
+            -webkit-font-smoothing: antialiased;
         }
         h1, h2, h3, .brand-font { font-family: 'Syncopate', sans-serif; }
 
         .brand-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid #a855f7;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
-            object-fit: cover;
-            transition: all 0.5s ease;
-            background-color: #1a1a1a;
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2px solid #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+            object-fit: cover; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); background-color: #1a1a1a;
         }
-
-        @media (min-width: 768px) { .brand-avatar { width: 40px; height: 40px; } }
-        .group:hover .brand-avatar { transform: scale(1.1) rotate(5deg); box-shadow: 0 0 25px rgba(168, 85, 247, 0.9); }
+        @media (min-width: 768px) { .brand-avatar { width: 42px; height: 42px; } }
+        .group:hover .brand-avatar { transform: scale(1.12) rotate(8deg); box-shadow: 0 0 25px rgba(168, 85, 247, 0.9); }
 
         .lightning-bolt {
-            color: #a855f7;
-            filter: drop-shadow(0 0 15px #a855f7);
-            animation: flicker 2s infinite;
-            display: inline-block;
-            transform: skewX(-10deg);
+            color: #c084fc; filter: drop-shadow(0 0 20px #a855f7);
+            animation: flicker 2.5s infinite; display: inline-block; transform: skewX(-10deg);
         }
         @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; filter: drop-shadow(0 0 20px #a855f7) brightness(1.2); }
-            20%, 24%, 55% { opacity: 0.3; filter: drop-shadow(0 0 5px #a855f7) brightness(0.8); }
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; filter: drop-shadow(0 0 25px #a855f7) brightness(1.3); }
+            20%, 24%, 55% { opacity: 0.35; filter: drop-shadow(0 0 5px #a855f7) brightness(0.8); }
         }
 
-        .night { position: fixed; top: 0; left: 0; width: 100%; height: 100%; transform: rotateZ(45deg); z-index: -1; }
+        /* Optimize Edilmiş Hafif Arka Plan Efekti (GPU Akif) */
+        .night { position: fixed; top: 0; left: 0; width: 100%; height: 100%; transform: rotateZ(45deg); z-index: -2; pointer-events: none; will-change: transform; }
         .shooting_star {
-            position: absolute;
-            left: 50%; top: 50%; height: 2px;
+            position: absolute; left: 50%; top: 50%; height: 2px;
             background: linear-gradient(-45deg, #a855f7, rgba(0, 0, 255, 0));
-            border-radius: 999px;
-            filter: drop-shadow(0 0 6px #a855f7);
-            animation: tail 3000ms ease-in-out infinite, shooting 3000ms ease-in-out infinite;
+            border-radius: 999px; filter: drop-shadow(0 0 8px #a855f7);
+            animation: tail 4000ms ease-in-out infinite, shooting 4000ms ease-in-out infinite;
         }
-        .shooting_star::before, .shooting_star::after {
-            content: ''; position: absolute; top: calc(50% - 1px); right: 0; height: 2px;
-            background: linear-gradient(-45deg, rgba(0, 255, 0, 0), #a855f7, rgba(0, 255, 0, 0));
-            transform: translateX(50%) rotateZ(45deg); border-radius: 100%; animation: shining 3000ms ease-in-out infinite;
+        .shooting_star:nth-child(1) { top: 5%; left: 10%; animation-delay: 0ms; }
+        .shooting_star:nth-child(2) { top: 25%; left: 60%; animation-delay: 1200ms; }
+        .shooting_star:nth-child(3) { top: 45%; left: 20%; animation-delay: 2400ms; }
+        @keyframes tail { 0% { width: 0; } 30% { width: 120px; } 100% { width: 0; } }
+        @keyframes shooting { 0% { transform: translateX(0); } 100% { transform: translateX(400px); } }
+
+        .purple-glow { text-shadow: 0 0 20px rgba(168, 85, 247, 0.7), 0 0 40px rgba(168, 85, 247, 0.4); }
+        .glass-card {
+            background: rgba(18, 6, 30, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 1.2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); transform: translateZ(0);
         }
-        .shooting_star::after { transform: translateX(50%) rotateZ(-45deg); }
-        .shooting_star:nth-child(1) { top: 10%; left: 10%; animation-delay: 0ms; }
-        .shooting_star:nth-child(2) { top: 30%; left: 50%; animation-delay: 800ms; }
-        .shooting_star:nth-child(3) { top: 50%; left: 20%; animation-delay: 1600ms; }
-        .shooting_star:nth-child(4) { top: 70%; left: 80%; animation-delay: 2400ms; }
-        .shooting_star:nth-child(5) { top: 20%; left: 90%; animation-delay: 1200ms; }
-
-        @keyframes tail { 0% { width: 0; } 30% { width: 100px; } 100% { width: 0; } }
-        @keyframes shining { 0% { width: 0; } 50% { width: 30px; } 100% { width: 0; } }
-        @keyframes shooting { 0% { transform: translateX(0); } 100% { transform: translateX(300px); } }
-
-        .purple-glow { text-shadow: 0 0 15px rgba(168, 85, 247, 0.7), 0 0 30px rgba(168, 85, 247, 0.4); }
-        .glass-card { background: rgba(15, 5, 25, 0.6); backdrop-filter: blur(15px); border: 1px solid rgba(168, 85, 247, 0.15); border-radius: 1rem; }
         .nav-link { position: relative; transition: color 0.3s ease; }
         .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: #a855f7; transition: width 0.3s ease; }
         .nav-link:hover::after { width: 100%; }
 
-        .page-content { display: none; }
-        .page-content.active { display: block; animation: fadeIn 0.8s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-content { display: none; will-change: opacity, transform; }
+        .page-content.active { display: block; animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .experience-tag { background: linear-gradient(90deg, #a855f7 0%, #6366f1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
+        .experience-tag { background: linear-gradient(90deg, #c084fc 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
 
         .roblox-icon {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            background-color: currentColor;
+            display: inline-block; width: 18px; height: 18px; background-color: currentColor;
             mask: url('https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg') no-repeat center;
             -webkit-mask: url('https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg') no-repeat center;
-            mask-size: contain;
-            -webkit-mask-size: contain;
+            mask-size: contain; -webkit-mask-size: contain;
         }
 
         .software-badge {
-            display: flex;
-            align-items: center;
-            background: rgba(168, 85, 247, 0.05);
-            border: 1px solid rgba(168, 85, 247, 0.1);
-            padding: 10px 16px;
-            border-radius: 12px;
-            transition: all 0.4s ease;
+            display: flex; align-items: center; background: rgba(168, 85, 247, 0.04);
+            border: 1px solid rgba(168, 85, 247, 0.12); padding: 12px 18px; border-radius: 14px;
+            transition: all 0.3s ease; transform: translateZ(0);
         }
         .software-badge:hover {
-            background: rgba(168, 85, 247, 0.15);
-            border-color: rgba(168, 85, 247, 0.4);
-            transform: scale(1.02);
-        }
-        .software-logo-box {
-            width: 32px;
-            height: 32px;
-            margin-right: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .social-container {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(168, 85, 247, 0.1);
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.5);
+            transform: translateY(-2px) scale(1.01); box-shadow: 0 5px 20px rgba(168, 85, 247, 0.2);
         }
 
         .social-link {
-            display: flex;
-            align-items: center;
-            padding: 8px 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(168, 85, 247, 0.1);
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.6);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            display: flex; align-items: center; padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 10px; font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: rgba(255, 255, 255, 0.7); transition: all 0.3s ease;
         }
-
-        .social-link i, .social-link .roblox-icon { margin-right: 8px; font-size: 14px; }
         .social-link:hover {
-            transform: translateY(-3px);
-            color: #fff;
-            border-color: rgba(168, 85, 247, 0.5);
-            background: rgba(168, 85, 247, 0.1);
-            box-shadow: 0 5px 15px rgba(168, 85, 247, 0.2);
+            transform: translateY(-3px); color: #fff; border-color: rgba(168, 85, 247, 0.6);
+            background: rgba(168, 85, 247, 0.15); box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);
         }
-        .social-link.instagram:hover { color: #E1306C; border-color: #E1306C; }
-        .social-link.soundcloud:hover { color: #ff5500; border-color: #ff5500; }
-        .social-link.roblox:hover { color: #fff; border-color: #fff; }
+        .social-link.instagram:hover { color: #f472b6; border-color: #f472b6; }
+        .social-link.soundcloud:hover { color: #fb923c; border-color: #fb923c; }
+        .social-link.roblox:hover { color: #cbd5e1; border-color: #cbd5e1; }
 
         .locked { overflow: hidden !important; height: 100vh; }
 
+        /* Giriş Ekranı */
         #enter-screen {
             position: fixed; inset: 0; z-index: 100; overflow: hidden;
-            background: radial-gradient(circle at 50% 40%, #1a0638 0%, #05010d 70%);
+            background: radial-gradient(circle at 50% 40%, #17032c 0%, #030008 75%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: opacity 0.9s ease, transform 0.9s ease, visibility 0.9s;
+            cursor: pointer; transition: opacity 0.8s ease, visibility 0.8s;
         }
-        #enter-screen.leaving { opacity: 0; transform: scale(1.08); visibility: hidden; pointer-events: none; }
+        #enter-screen.leaving { opacity: 0; visibility: hidden; pointer-events: none; }
         .enter-ring {
             position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-            border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 50%;
-            animation: ringPulse 4s ease-out infinite;
+            border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 50%;
+            animation: ringPulse 3.5s cubic-bezier(0, 0.2, 0.8, 1) infinite; pointer-events: none;
         }
         @keyframes ringPulse {
-            0% { width: 120px; height: 120px; opacity: 0.8; }
-            100% { width: 900px; height: 900px; opacity: 0; }
+            0% { width: 100px; height: 100px; opacity: 0.8; }
+            100% { width: 850px; height: 850px; opacity: 0; }
         }
         .enter-hint { animation: hintPulse 2s ease-in-out infinite; }
         @keyframes hintPulse {
-            0%, 100% { opacity: 0.35; letter-spacing: 0.5em; }
-            50% { opacity: 1; letter-spacing: 0.6em; }
+            0%, 100% { opacity: 0.4; letter-spacing: 0.4em; }
+            50% { opacity: 1; letter-spacing: 0.55em; }
         }
 
+        /* Ses Kontrolcüsü */
         #volume-control {
-            position: fixed; top: 82px; left: 12px; z-index: 60;
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 14px; border-radius: 16px;
-            background: rgba(15, 5, 25, 0.7); backdrop-filter: blur(15px);
-            border: 1px solid rgba(168, 85, 247, 0.25);
-            box-shadow: 0 0 25px rgba(168, 85, 247, 0.12);
-            opacity: 0; transform: translateX(-20px); pointer-events: none;
-            transition: opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s;
-        }
-        body.entered #volume-control { opacity: 1; transform: none; pointer-events: auto; }
-        @media (min-width: 768px) { #volume-control { top: 104px; left: 24px; } }
-        #vol-btn { color: #c084fc; font-size: 16px; width: 22px; background: none; border: 0; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
-        #vol-btn:hover { color: #fff; transform: scale(1.15); }
-        #vol-slider {
-            -webkit-appearance: none; appearance: none; width: 90px; height: 4px; border-radius: 999px;
-            background: linear-gradient(to right, #a855f7 var(--fill, 100%), rgba(168, 85, 247, 0.2) var(--fill, 100%));
-            outline: none; cursor: pointer;
-        }
-        @media (min-width: 768px) { #vol-slider { width: 130px; } }
-        #vol-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
-            background: #fff; box-shadow: 0 0 10px #a855f7; border: 0;
-        }
-        #vol-slider::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px #a855f7; border: 0; }
-        #now-playing {
-            display: block; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-            font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(216, 180, 254, 0.6);
-        }
-
-        .eq { display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 48px; margin-top: 3rem; }
-        .eq span {
-            width: 3px; height: 100%; border-radius: 2px; transform-origin: bottom; transform: scaleY(0.12);
-            background: linear-gradient(to top, #a855f7, #6366f1);
-            animation: eqBar 1.1s ease-in-out infinite alternate; animation-play-state: paused;
-        }
-        body.playing .eq span { animation-play-state: running; }
-        @keyframes eqBar { 0% { transform: scaleY(0.12); } 100% { transform: scaleY(1); } }
-
-        .orb { position: fixed; border-radius: 50%; filter: blur(90px); z-index: -1; opacity: 0.35; animation: drift 18s ease-in-out infinite alternate; pointer-events: none; }
-        .orb-1 { width: 420px; height: 420px; top: -10%; left: -10%; background: #7c3aed; }
-        .orb-2 { width: 480px; height: 480px; bottom: -15%; right: -10%; background: #4f46e5; animation-delay: -9s; }
-        @keyframes drift { to { transform: translate(60px, 40px) scale(1.15); } }
-
-        #cursor-glow {
-            position: fixed; left: 0; top: 0; width: 420px; height: 420px; margin: -210px 0 0 -210px;
-            border-radius: 50%; pointer-events: none; z-index: -1;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.14), transparent 65%);
-        }
-        @media (hover: none) { #cursor-glow { display: none; } }
-
-        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s ease, transform 0.9s ease; }
-        .reveal.visible { opacity: 1; transform: none; }
-
-        ::selection { background: #a855f7; color: #fff; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #05010d; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(#a855f7, #6366f1); border-radius: 8px; }
-
-        #scroll-progress {
-            position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 70;
-            background: linear-gradient(90deg, #a855f7, #6366f1, #22d3ee);
-            box-shadow: 0 0 12px #a855f7;
-        }
-
-        .shimmer-text {
-            background: linear-gradient(110deg, #ffffff 20%, #c084fc 40%, #ffffff 60%);
-            background-size: 200% 100%;
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent; color: transparent;
-            filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.55));
-            animation: shimmer 5s linear infinite;
-        }
-        @keyframes shimmer { to { background-position: -200% 0; } }
-
-        .pulse-glow { animation: pulseGlow 2.5s ease-in-out infinite; }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(255, 85, 0, 0.35); }
-            50% { box-shadow: 0 0 35px rgba(255, 85, 0, 0.7); }
-        }
-
-        .marquee {
-            overflow: hidden; white-space: nowrap; padding: 14px 0;
-            border-top: 1px solid rgba(168, 85, 247, 0.15); border-bottom: 1px solid rgba(168, 85, 247, 0.15);
-            background: rgba(168, 85, 247, 0.04);
-        }
-        .marquee-track { display: inline-flex; align-items: center; gap: 2.5rem; animation: marquee 35s linear infinite; }
-        .marquee-track span { font-family: 'Syncopate', sans-serif; font-size: 11px; letter-spacing: 0.4em; color: rgba(216, 180, 254, 0.5); }
-        .marquee-track i { color: #a855f7; font-size: 10px; }
-        @keyframes marquee { to { transform: translateX(-50%); } }
-
-        .glass-card.spot { position: relative; transition: transform 0.2s ease-out, border-color 0.3s ease; }
-        .glass-card.spot::before {
-            content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-            background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(168, 85, 247, 0.14), transparent 45%);
-            opacity: 0; transition: opacity 0.3s ease;
-        }
-        .glass-card.spot:hover::before { opacity: 1; }
-
-        .player-frame { box-shadow: 0 0 60px rgba(168, 85, 247, 0.15); }
-
-        .footer-icon { color: rgba(192, 132, 252, 0.5); font-size: 20px; transition: all 0.3s ease; }
-        .footer-icon:hover { color: #fff; transform: translateY(-3px); filter: drop-shadow(0 0 8px #a855f7); }
-    </style>
-</head>
-<body class="antialiased overflow-x-hidden locked">
-
-    <div id="enter-screen">
-        <div class="enter-ring" style="animation-delay: 0s"></div>
-        <div class="enter-ring" style="animation-delay: 1.3s"></div>
-        <div class="enter-ring" style="animation-delay: 2.6s"></div>
-        <div class="relative z-10 flex flex-col items-center text-center px-6">
-            <div class="flex items-center">
-                <h2 class="brand-font text-6xl md:text-9xl font-bold purple-glow tracking-tighter">ZESU</h2>
-                <div class="ml-4 lightning-bolt"><i class="fas fa-bolt text-4xl md:text-8xl"></i></div>
-            </div>
-            <p class="enter-hint mt-12 text-purple-200 text-[10px] md:text-sm font-bold uppercase tracking-[0.5em]">GİRMEK İÇİN TIKLA</p>
-            <p class="mt-4 text-purple-400/40 text-[9px] uppercase tracking-[0.3em]"><i class="fas fa-headphones mr-2"></i>Kulaklık önerilir</p>
-        </div>
-    </div>
-
-    <div id="volume-control">
-        <button id="vol-btn" aria-label="Sesi aç / kapat"><i class="fas fa-volume-high"></i></button>
-        <div class="flex flex-col gap-2">
-            <input id="vol-slider" type="range" min="0" max="100" value="10" aria-label="Ses seviyesi">
-            <span id="now-playing">Şimdi çalıyor</span>
-        </div>
-        <span id="vol-value" class="text-[10px] font-bold text-purple-300 w-7 text-right">10</span>
-    </div>
-
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div id="cursor-glow"></div>
-    <div id="scroll-progress"></div>
-
-    <div class="night">
-        <div class="shooting_star"></div>
-        <div class="shooting_star"></div>
-        <div class="shooting_star"></div>
-        <div class="shooting_star"></div>
-        <div class="shooting_star"></div>
-    </div>
-
-    <nav class="fixed top-0 w-full z-50 px-4 md:px-6 py-4 md:py-6 bg-black/40 backdrop-blur-xl border-b border-purple-900/20">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <button onclick="scrollToTop()" class="group flex items-center space-x-2 md:space-x-3 outline-none">
-                <img src="shared/images/siteicon.png" alt="Zesu Logo" class="brand-avatar" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Zesu&top=flower&backgroundColor=a855f7'">
-                <h1 class="text-lg md:text-2xl font-bold tracking-widest text-white group-hover:text-purple-400 transition-colors uppercase text-left">ZESU</h1>
-            </button>
-            <div class="flex items-center space-x-4 md:space-x-10 text-[9px] md:text-xs font-bold uppercase tracking-[0.1em] md:tracking-[0.2em]">
-                <button onclick="scrollToTop()" class="nav-link text-purple-200">ANA SAYFA</button>
-                <a href="#about" onclick="showPage('home')" class="nav-link text-purple-200">Hakkımda</a>
-                <a href="#music" onclick="showPage('home')" class="nav-link text-purple-200">Portfolyo</a>
-                <button onclick="showPage('midi')" class="nav-link text-purple-200">MIDI</button>
-            </div>
-        </div>
-    </nav>
-
-    <main id="home-page" class="page-content active">
-        <section id="home" class="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20 overflow-hidden">
-            <div class="text-center z-10 w-full">
-                <div class="flex flex-col md:flex-row items-center justify-center">
-                    <h2 class="text-6xl sm:text-7xl md:text-[12rem] font-bold mb-0 shimmer-text tracking-tighter leading-none opacity-90">ZESU</h2>
-                    <div class="mt-4 md:mt-0 md:ml-8 lightning-bolt"><i class="fas fa-bolt text-4xl md:text-[10rem]"></i></div>
-                </div>
-                <div class="flex items-center justify-center gap-2 md:gap-4 mt-6 md:-mt-2">
-                    <div class="h-[1px] w-6 md:w-16 bg-purple-500/50"></div>
-                    <span class="text-purple-400 text-sm md:text-4xl font-bold tracking-[0.3em] md:tracking-[0.6em] uppercase whitespace-nowrap">SOUNDCLOUD</span>
-                    <div class="h-[1px] w-6 md:w-16 bg-purple-500/50"></div>
-                </div>
-                <p class="mt-8 md:mt-10 text-purple-200/40 font-bold text-[9px] md:text-sm tracking-[0.3em] md:tracking-[0.5em] uppercase px-4">4 YILLIK DİJİTAL SES DENEYİMİ</p>
-                <div class="mt-12 md:mt-16 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 px-6">
-                    <a href="https://soundcloud.com/zesudev" target="_blank" class="pulse-glow w-full md:w-auto px-8 py-4 bg-[#ff5500] hover:bg-[#ff7700] text-white rounded-full font-bold uppercase tracking-widest transition-all transform hover:scale-105 shadow-lg shadow-orange-600/40 text-center text-sm"><i class="fab fa-soundcloud mr-2"></i> SoundCloud</a>
-                    <a href="#about" class="w-full md:w-auto px-8 py-4 border border-purple-500/30 hover:border-purple-500 text-purple-200 rounded-full font-bold uppercase tracking-widest transition-all text-center text-sm">Hikayem</a>
-                </div>
-                <div class="eq" id="eq"></div>
-            </div>
-            <a href="#about" class="absolute bottom-8 left-1/2 -translate-x-1/2 text-purple-400/50 text-[9px] uppercase tracking-[0.4em] flex flex-col items-center gap-2 hover:text-purple-300 transition-colors"><span>Kaydır</span><i class="fas fa-chevron-down animate-bounce"></i></a>
-        </section>
-
-        <div class="marquee"><div class="marquee-track" id="marquee-track"></div></div>
-
-        <section id="about" class="py-20 md:py-32 px-6">
-            <div class="max-w-5xl mx-auto">
-                <div class="flex items-center gap-4 md:gap-6 mb-12 md:mb-16">
-                    <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent to-purple-900"></div>
-                    <h3 class="brand-font text-xl md:text-2xl text-purple-200 uppercase tracking-[0.2em] md:tracking-[0.4em]">Hakkımda</h3>
-                    <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-purple-900"></div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
-                    <div class="lg:col-span-5 glass-card p-8 md:p-10 flex flex-col items-center text-center">
-                        <div class="relative group mb-6 md:mb-8">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
-                            <img src="shared/images/icon.png" alt="Zesu Profil" class="relative w-32 h-32 md:w-48 md:h-48 rounded-full border-2 border-white/10 shadow-2xl object-cover grayscale hover:grayscale-0 transition-all duration-500" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Zesu&top=flower&backgroundColor=a855f7'">
-                        </div>
-                        <h4 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-wider mb-2">Zesu</h4>
-                        <div class="experience-tag text-base md:text-lg mb-4 md:mb-6 uppercase tracking-widest">4 Yıllık Deneyim</div>
-                        <p class="text-purple-200/70 leading-relaxed font-light mb-8 text-sm md:text-base">SoundCloud platformunda 4 yıldır ses tasarımı ve prodüksiyon süreçlerini yönetiyorum. Atmosferik tonlar ve deneysel melodiler üzerine odaklanıyorum.</p>
-
-                        <div class="flex gap-4 md:gap-6">
-                            <div class="text-center"><span class="block text-xl md:text-2xl font-bold text-white" data-count="4" data-suffix="+">0+</span><span class="text-[8px] md:text-[10px] text-purple-500 uppercase tracking-tighter">Yıl</span></div>
-                            <div class="w-[1px] bg-purple-500/20"></div>
-                            <div class="text-center"><span class="block text-xl md:text-2xl font-bold text-white" data-count="50" data-suffix="+">0+</span><span class="text-[8px] md:text-[10px] text-purple-500 uppercase tracking-tighter">Proje</span></div>
-                            <div class="w-[1px] bg-purple-500/20"></div>
-                            <div class="text-center"><span class="block text-xl md:text-2xl font-bold text-white">Cloud</span><span class="text-[8px] md:text-[10px] text-purple-500 uppercase tracking-tighter">Odaklı</span></div>
-                        </div>
-                    </div>
-
-                    <div class="lg:col-span-7 space-y-6 md:space-y-8">
-                        <div class="glass-card p-6 md:p-8 hover:border-purple-500/40 transition-colors group h-full flex flex-col">
-                            <div class="flex justify-between items-start mb-6">
-                                <div><h5 class="text-lg md:text-xl font-bold text-purple-300 uppercase tracking-widest">PRODÜKTÖR</h5><span class="text-[10px] md:text-xs text-purple-500/60 uppercase">2022 - GÜNÜMÜZ</span></div>
-                                <i class="fas fa-compact-disc text-2xl md:text-3xl text-purple-500/30 group-hover:rotate-180 transition-transform duration-1000"></i>
-                            </div>
-
-                            <div class="mb-8">
-                                <h6 class="text-[9px] uppercase tracking-[0.3em] text-purple-500/80 mb-4 font-bold">Kullandığım Uygulamalar</h6>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div class="software-badge">
-                                        <div class="software-logo-box">
-                                            <svg viewBox="0 0 100 100" class="w-6 h-6 drop-shadow-[0_0_5px_rgba(255,100,0,0.5)]">
-                                                <path fill="#FF6D00" d="M80,50 c0,25-20,40-40,40 c-15,0-25-10-25-25 c0-15,10-25,25-25 c0-15,15-25,30-20 C80,25,80,35,80,50z" />
-                                                <path fill="#2E7D32" d="M50,15 c0,0,5,10,0,15 c-5,5-15,0-15,0 c0,0,5-10,15-15z" />
-                                            </svg>
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <span class="text-[11px] font-bold text-white tracking-wide">FL STUDIO 2025</span>
-                                            <span class="text-[8px] text-purple-400 uppercase tracking-tighter">Primary DAW</span>
-                                        </div>
-                                    </div>
-                                    <div class="software-badge">
-                                        <div class="software-logo-box">
-                                            <svg viewBox="0 0 100 100" class="w-6 h-6">
-                                                <rect width="100" height="100" rx="15" fill="#001e36" />
-                                                <path fill="#00e5ff" d="M25,70 L40,30 L55,70 M30,60 L50,60" stroke="#00e5ff" stroke-width="2" fill="none" />
-                                                <path fill="#00e5ff" d="M60,45 v25 M60,55 c5-5,15-5,15,5 v15" stroke="#00e5ff" stroke-width="2" fill="none" />
-                                            </svg>
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <span class="text-[11px] font-bold text-white tracking-wide">ADOBE AUDITION</span>
-                                            <span class="text-[8px] text-purple-400 uppercase tracking-tighter">Audio Editing</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="space-y-6 mb-8">
-                                <div>
-                                    <div class="flex justify-between text-[8px] md:text-[10px] uppercase tracking-widest mb-1"><span>Prodüksiyon Hızı</span><span>%95</span></div>
-                                    <div class="h-1 bg-purple-900/30 rounded-full overflow-hidden"><div class="h-full bg-purple-500 w-[95%]"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-[8px] md:text-[10px] uppercase tracking-widest mb-1"><span>Mix & Mastering</span><span>%54</span></div>
-                                    <div class="h-1 bg-purple-900/30 rounded-full overflow-hidden"><div class="h-full bg-purple-500 w-[54%]"></div></div>
-                                </div>
-                            </div>
-
-                            <div class="social-container mt-auto">
-                                <a href="https://www.instagram.com/m.efecan011/" target="_blank" class="social-link instagram">
-                                    <i class="fab fa-instagram"></i>
-                                    <span>Instagram</span>
-                                </a>
-                                <a href="https://www.roblox.com/users/1140047458/profile" target="_blank" class="social-link roblox">
-                                    <span class="roblox-icon"></span>
-                                    <span>Roblox</span>
-                                </a>
-                                <a href="https://soundcloud.com/zesudev" target="_blank" class="social-link soundcloud">
-                                    <i class="fab fa-soundcloud"></i>
-                                    <span>SoundCloud</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="music" class="py-20 md:py-32 px-6 bg-black/20">
-            <div class="max-w-4xl mx-auto">
-                <div class="flex items-center gap-4 md:gap-6 mb-12 md:mb-16">
-                    <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent to-purple-900"></div>
-                    <h3 class="brand-font text-xl md:text-2xl text-purple-200 uppercase tracking-[0.2em] md:tracking-[0.4em]">Çalışmalar</h3>
-                    <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-purple-900"></div>
-                </div>
-                <div class="glass-card player-frame p-2 md:p-4 shadow-2xl overflow-hidden ring-1 ring-purple-500/20">
-                    <div class="rounded-lg md:rounded-xl overflow-hidden bg-black min-h-[450px]">
-                        <iframe id="sc-player" width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/zesudev/tracks&color=%23a855f7&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"></iframe>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <main id="midi-page" class="page-content pt-24 md:pt-32 pb-20 px-6">
-        <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-4xl md:text-6xl font-bold mb-6 purple-glow tracking-tighter uppercase">MP3 TO MIDI</h2>
-            <p class="text-purple-300/60 mb-12 font-light tracking-widest uppercase text-xs">Yapay zeka ile sesi dijital notaya dönüştür.</p>
-
-            <div class="glass-card p-12 border-dashed border-2 border-purple-500/20 relative overflow-hidden">
-                <div id="upload-stage">
-                    <div class="group cursor-pointer flex flex-col items-center justify-center space-y-6" onclick="document.getElementById('fileInput').click()">
-                        <div class="w-24 h-24 rounded-full bg-purple-900/20 border border-purple-500/30 flex items-center justify-center group-hover:bg-purple-600/20 group-hover:scale-110 transition-all duration-500">
-                            <i class="fas fa-cloud-upload-alt text-4xl text-purple-500"></i>
-                        </div>
-                        <div>
-                            <p class="text-purple-100 font-bold text-xl mb-2">Ses Dosyası Seç</p>
-                            <p class="text-purple-400/40 text-[10px] uppercase tracking-widest">MP3, WAV veya OGG</p>
-                        </div>
-                        <input type="file" id="fileInput" class="hidden" accept="audio/*" onchange="handleFileSelect(event)">
-                    </div>
-                </div>
-
-                <div id="processing-stage" class="hidden py-10">
-                    <div class="flex flex-col items-center space-y-8">
-                        <div class="relative w-24 h-24">
-                            <div class="absolute inset-0 flex items-center justify-center space-x-1">
-                                <div class="w-1 h-8 bg-purple-500 animate-[bounce_1s_infinite_0.1s]"></div>
-                                <div class="w-1 h-12 bg-purple-400 animate-[bounce_1s_infinite_0.2s]"></div>
-                                <div class="w-1 h-16 bg-purple-300 animate-[bounce_1s_infinite_0.3s]"></div>
-                                <div class="w-1 h-10 bg-purple-400 animate-[bounce_1s_infinite_0.4s]"></div>
-                                <div class="w-1 h-6 bg-purple-500 animate-[bounce_1s_infinite_0.5s]"></div>
-                            </div>
-                        </div>
-                        <div class="w-full max-w-xs bg-purple-900/20 h-1.5 rounded-full overflow-hidden">
-                            <div id="progress" class="h-full bg-gradient-to-r from-purple-600 to-blue-400 w-0 transition-all duration-300 shadow-[0_0_10px_#a855f7]"></div>
-                        </div>
-                        <p id="status-text" class="text-purple-200 text-xs font-bold uppercase tracking-[0.3em]">AI Modeli Başlatılıyor...</p>
-                    </div>
-                </div>
-
-                <div id="result-stage" class="hidden">
-                    <div class="flex flex-col items-center space-y-6">
-                        <div class="w-20 h-20 bg-green-500/20 border border-green-500/50 rounded-full flex items-center justify-center text-green-500 text-3xl animate-pulse">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <h4 class="text-2xl font-bold text-white uppercase tracking-tight">Dönüşüm Başarılı</h4>
-                        <button id="downloadBtn" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-12 py-4 rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-purple-900/40">
-                            <i class="fas fa-download mr-2"></i> MIDI İndir
-                        </button>
-                        <button onclick="resetConverter()" class="text-purple-400/40 text-[10px] uppercase hover:text-purple-400 transition-colors">YENİ DÖNÜŞÜM</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="py-16 md:py-24 bg-black/60 border-t border-purple-900/20 px-6">
-        <div class="max-w-4xl mx-auto flex flex-col items-center">
-            <div class="flex items-center gap-6 mb-8">
-                <a href="https://soundcloud.com/zesudev" target="_blank" class="footer-icon"><i class="fab fa-soundcloud"></i></a>
-                <a href="https://www.instagram.com/m.efecan011/" target="_blank" class="footer-icon"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.roblox.com/users/1140047458/profile" target="_blank" class="footer-icon"><span class="roblox-icon"></span></a>
-            </div>
-            <p class="text-[8px] md:text-[10px] tracking-[0.8em] md:tracking-[1.5em] text-purple-900 uppercase text-center font-bold">ZESU © 2026</p>
-        </div>
-    </footer>
-
-    <script>
-        function showPage(pageId) {
-            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
-            const target = document.getElementById(pageId + '-page');
-            if (target) {
-                target.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-        function scrollToTop() { showPage('home'); }
-
-        const iframeElement = document.getElementById('sc-player');
-        const widget = SC.Widget(iframeElement);
-        const enterScreen = document.getElementById('enter-screen');
-        const volSlider = document.getElementById('vol-slider');
-        const volBtn = document.getElementById('vol-btn');
-        const volValue = document.getElementById('vol-value');
-        const nowPlaying = document.getElementById('now-playing');
-        let volume = 10;
-        let lastVolume = 60;
-        let widgetReady = false;
-        let entered = false;
-
-
-        function applyVolume(v) {
-            volume = v;
-            if (v > 0) lastVolume = v;
-            volSlider.value = v;
-            volSlider.style.setProperty('--fill', v + '%');
-            volValue.textContent = v;
-            const icon = v === 0 ? 'fa-volume-xmark' : v < 50 ? 'fa-volume-low' : 'fa-volume-high';
-            volBtn.innerHTML = '<i class="fas ' + icon + '"></i>';
-            if (widgetReady) widget.setVolume(v);
-        }
-
-        function updateTitle() {
-            widget.getCurrentSound(sound => {
-                if (sound && sound.title) nowPlaying.textContent = sound.title;
-            });
-        }
-
-        function enterSite() {
-            if (entered) return;
-            entered = true;
-            document.body.classList.remove('locked');
-            document.body.classList.add('entered');
-            enterScreen.classList.add('leaving');
-            setTimeout(() => enterScreen.remove(), 1000);
-            if (widgetReady) {
-                widget.setVolume(volume);
-                widget.play();
-            }
-        }
-
-        applyVolume(volume);
-
-        volSlider.addEventListener('input', e => applyVolume(parseInt(e.target.value, 10)));
-        volBtn.addEventListener('click', () => applyVolume(volume === 0 ? lastVolume : 0));
-        enterScreen.addEventListener('click', enterSite);
-        document.addEventListener('keydown', e => {
-            if (!entered && (e.key === 'Enter' || e.key === ' ')) {
-                e.preventDefault();
-                enterSite();
-            }
-        });
-
-        widget.bind(SC.Widget.Events.READY, () => {
-            widgetReady = true;
-            widget.setVolume(volume);
-            if (entered) widget.play();
-        });
-        widget.bind(SC.Widget.Events.PLAY, () => {
-            document.body.classList.add('playing');
-            updateTitle();
-        });
-        widget.bind(SC.Widget.Events.PAUSE, () => document.body.classList.remove('playing'));
-
-        const eq = document.getElementById('eq');
-        for (let i = 0; i < 32; i++) {
-            const bar = document.createElement('span');
-            bar.style.animationDelay = (i * -0.13) + 's';
-            bar.style.animationDuration = (0.7 + (i % 5) * 0.18) + 's';
-            eq.appendChild(bar);
-        }
-
-        const glow = document.getElementById('cursor-glow');
-        if (window.matchMedia('(hover: hover)').matches) {
-            window.addEventListener('mousemove', e => {
-                glow.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
-            }, { passive: true });
-        }
-
-        const revealObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.15 });
-        document.querySelectorAll('#about > div > *, #music > div > *').forEach(el => {
-            el.classList.add('reveal');
-            revealObserver.observe(el);
-        });
-
-        const marqueeTrack = document.getElementById('marquee-track');
-        const marqueeWords = ['ATMOSFERİK', 'DENEYSEL', 'SES TASARIMI', 'PRODÜKSİYON', 'FL STUDIO', 'SOUNDCLOUD'];
-        for (let r = 0; r < 4; r++) {
-            marqueeWords.forEach(word => {
-                const text = document.createElement('span');
-                text.textContent = word;
-                const icon = document.createElement('i');
-                icon.className = 'fas fa-bolt';
-                marqueeTrack.appendChild(text);
-                marqueeTrack.appendChild(icon);
-            });
-        }
-
-        const progressBar = document.getElementById('scroll-progress');
-        window.addEventListener('scroll', () => {
-            const max = document.documentElement.scrollHeight - window.innerHeight;
-            progressBar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
-        }, { passive: true });
-
-        const counterObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                counterObserver.unobserve(entry.target);
-                const el = entry.target;
-                const end = parseInt(el.dataset.count, 10);
-                const suffix = el.dataset.suffix || '';
-                const startTime = performance.now();
-                const tick = now => {
-                    const p = Math.min((now - startTime) / 1600, 1);
-                    el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))) + suffix;
-                    if (p < 1) requestAnimationFrame(tick);
-                };
-                requestAnimationFrame(tick);
-            });
-        }, { threshold: 0.5 });
-        document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
-
-        const canHover = window.matchMedia('(hover: hover)').matches;
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.classList.add('spot');
-            const tilt = canHover && card.closest('#about');
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mx', x + 'px');
-                card.style.setProperty('--my', y + 'px');
-                if (tilt) {
-                    const rx = (y / rect.height - 0.5) * -6;
-                    const ry = (x / rect.width - 0.5) * 6;
-                    card.style.transform = 'perspective(900px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
-                }
-            });
-            card.addEventListener('mouseleave', () => { card.style.transform = ''; });
-        });
-
-        const model = new mm.OnsetsAndFrames('https://storage.googleapis.com/magentadata/js/checkpoints/transcription/onsets_frames_uni');
-        let currentMidiBlob = null;
-        let selectedFileName = "";
-
-        async function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            selectedFileName = file.name.split('.').slice(0, -1).join('.') + ".mid";
-            const uploadStage = document.getElementById('upload-stage');
-            const procStage = document.getElementById('processing-stage');
-            const statusText = document.getElementById('status-text');
-            const progressBar = document.getElementById('progress');
-
-            uploadStage.classList.add('hidden');
-            procStage.classList.remove('hidden');
-
-            try {
-                statusText.innerText = "Yapay Zeka Motoru Hazırlanıyor...";
-                progressBar.style.width = '20%';
-                if (!model.isInitialized()) {
-                    await model.initialize();
-                }
-
-                statusText.innerText = "Ses Dosyası Okunuyor...";
-                progressBar.style.width = '40%';
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const arrayBuffer = await file.arrayBuffer();
-                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-                statusText.innerText = "Notalar Ayrıştırılıyor (Bu işlem uzun sürebilir)...";
-                progressBar.style.width = '70%';
-                const ns = await model.transcribeFromAudioBuffer(audioBuffer);
-
-                statusText.innerText = "MIDI Dosyası Oluşturuluyor...";
-                progressBar.style.width = '90%';
-                const midiData = mm.sequenceProtoToMidi(ns);
-                currentMidiBlob = new Blob([midiData], { type: 'audio/midi' });
-
-                progressBar.style.width = '100%';
-                setTimeout(() => {
-                    procStage.classList.add('hidden');
-                    document.getElementById('result-stage').classList.remove('hidden');
-
-                    const downloadBtn = document.getElementById('downloadBtn');
-                    downloadBtn.onclick = () => {
-                        const url = window.URL.createObjectURL(currentMidiBlob);
-                        const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = url;
-                        a.download = selectedFileName;
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                    };
-                }, 500);
-
-            } catch (err) {
-                console.error(err);
-                statusText.innerText = "Hata Oluştu! Lütfen Sayfayı Yenileyin.";
-                statusText.style.color = "#ef4444";
-            }
-        }
-
-        function resetConverter() {
-            document.getElementById('result-stage').classList.add('hidden');
-            document.getElementById('upload-stage').classList.remove('hidden');
-            document.getElementById('fileInput').value = "";
-            document.getElementById('progress').style.width = '0%';
-            document.getElementById('status-text').innerText = "AI Modeli Başlatılıyor...";
-            currentMidiBlob = null;
-        }
-    </script>
-</body>
-</html>
+            position: fixed; top: 80px; left: 12px; z-index: 60;
+            display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 16px;
+            background: rgba(18, 6, 30, 0.75); backdrop-filter: blur(15px);
+            border: 1px solid rgba(168, 85, 247
