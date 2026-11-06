@@ -1276,10 +1276,18 @@
             else auth.signInAnonymously();
         });
 
+        function randomCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            const bytes = crypto.getRandomValues(new Uint8Array(10));
+            return Array.from(bytes, b => chars[b % chars.length]).join('');
+        }
+
         async function claimName(name) {
             const ref = firebase.database().ref('usernames/' + name.toLowerCase());
             const snap = await ref.once('value');
-            if (snap.exists()) return snap.val() === chatUid;
+            if (snap.exists() && snap.val() === chatUid) return true;
+            const isAdmin = auth.currentUser && !auth.currentUser.isAnonymous;
+            if (snap.exists() && !isAdmin) return false;
             try {
                 await ref.set(chatUid);
                 return true;
@@ -1288,12 +1296,44 @@
             }
         }
 
+        async function recoverName(name, code) {
+            const key = name.toLowerCase();
+            const db = firebase.database();
+            const proof = db.ref('recover/' + key);
+            try {
+                await proof.set(chatUid + ':' + code);
+                await db.ref('usernames/' + key).set(chatUid);
+                localStorage.setItem('chatCode', code);
+                return true;
+            } catch (e) {
+                return false;
+            } finally {
+                proof.remove().catch(() => {});
+            }
+        }
+
+        async function ensureCode(name) {
+            if (localStorage.getItem('chatCode')) return;
+            const code = randomCode();
+            try {
+                await firebase.database().ref('secrets/' + name.toLowerCase()).set(code);
+                localStorage.setItem('chatCode', code);
+                alert('Kurtarma kodun: ' + code + '\nBunu bir yere not al. Takma adını başka cihazda ya da tarayıcı verin silinirse geri almak için gerekecek. Sohbette /kod yazarak tekrar görebilirsin.');
+            } catch (e) {}
+        }
+
         async function ensureName() {
             if (!chatUid) return false;
             if (nameVerified && chatName) return true;
-            if (chatName && /^[A-Za-z0-9_-]{3,20}$/.test(chatName) && await claimName(chatName)) {
-                nameVerified = true;
-                return true;
+            if (chatName && /^[A-Za-z0-9_-]{3,20}$/.test(chatName)) {
+                let ok = await claimName(chatName);
+                const saved = localStorage.getItem('chatCode');
+                if (!ok && saved) ok = await recoverName(chatName, saved);
+                if (ok) {
+                    nameVerified = true;
+                    await ensureCode(chatName);
+                    return true;
+                }
             }
             chatName = null;
             while (true) {
@@ -1308,9 +1348,19 @@
                     chatName = name;
                     nameVerified = true;
                     localStorage.setItem('chatName', name);
+                    localStorage.removeItem('chatCode');
+                    await ensureCode(name);
                     return true;
                 }
-                alert('Bu takma ad kullanılıyor, başka bir tane seç.');
+                const code = prompt('Bu takma ad kullanılıyor. Ad sana aitse kurtarma kodunu gir, değilse boş bırakıp başka bir ad seç:');
+                const cleaned = code ? code.trim().toUpperCase() : '';
+                if (cleaned && await recoverName(name, cleaned)) {
+                    chatName = name;
+                    nameVerified = true;
+                    localStorage.setItem('chatName', name);
+                    return true;
+                }
+                alert(cleaned ? 'Kurtarma kodu yanlış.' : 'Başka bir takma ad seç.');
             }
         }
 
@@ -1335,6 +1385,7 @@
             if (!raw) return;
             if (raw === '/admin') { chatInput.value = ''; adminLogin(); return; }
             if (raw === '/temizle') { chatInput.value = ''; clearChat(); return; }
+            if (raw === '/kod') { chatInput.value = ''; alert(localStorage.getItem('chatCode') ? 'Kurtarma kodun: ' + localStorage.getItem('chatCode') : 'Kayıtlı kurtarma kodun yok.'); return; }
             if (Date.now() - lastSent < 2000) return;
             if (!(await ensureName())) return;
             lastSent = Date.now();
