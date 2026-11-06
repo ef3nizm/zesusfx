@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
@@ -658,7 +659,7 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-left">
                 <!-- PowerTürk -->
-                <div class="radio-card" data-stream="https://listen.powerapp.com.tr/powerturk/abr/playlist.m3u8" data-name="PowerTürk" data-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/PowerT%C3%BCrk_logo.svg/512px-PowerT%C3%BCrk_logo.svg.png">
+                <div class="radio-card" data-search="power turk" data-names="power turk fm,powerturk,power türk,power türk fm" data-name="PowerTürk">
                     <div class="radio-icon"><i class="fas fa-bolt"></i></div>
                     <div class="radio-info"><h4>PowerTürk</h4><span>Pop</span></div>
                     <i class="fas fa-play-circle radio-status-icon"></i>
@@ -699,19 +700,64 @@
                     <i class="fas fa-play-circle radio-status-icon"></i>
                 </div>
 
-                <!-- Radyo 7 (YAKINDA - DEVRE DIŞI) -->
-                <div class="radio-card disabled" data-name="Radyo 7" aria-disabled="true">
-                    <span class="coming-soon-badge">Yakında</span>
-                    <div class="radio-icon"><i class="fas fa-broadcast-tower"></i></div>
-                    <div class="radio-info"><h4>Radyo 7</h4><span>Türkçe Pop</span></div>
-                    <i class="fas fa-clock radio-status-icon"></i>
+                                <div class="radio-card" data-search="metro fm" data-names="metro fm,metrofm" data-name="Metro FM">
+                    <div class="radio-icon"><i class="fas fa-music"></i></div>
+                    <div class="radio-info"><h4>Metro FM</h4><span>Pop/Dance</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
                 </div>
 
-                <!-- Kral Pop (YAKINDA - DEVRE DIŞI) -->
-                <div class="radio-card disabled" data-name="Kral Pop" aria-disabled="true">
-                    <span class="coming-soon-badge">Yakında</span>
+                <div class="radio-card" data-search="alem fm" data-names="alem fm,alemfm" data-name="Alem FM">
+                    <div class="radio-icon"><i class="fas fa-headphones"></i></div>
+                    <div class="radio-info"><h4>Alem FM</h4><span>Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <div class="radio-card" data-search="best fm" data-names="best fm,bestfm" data-name="Best FM">
+                    <div class="radio-icon"><i class="fas fa-thumbs-up"></i></div>
+                    <div class="radio-info"><h4>Best FM</h4><span>Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <div class="radio-card" data-search="kral fm" data-names="kral fm,kralfm" data-name="Kral FM">
+                    <div class="radio-icon"><i class="fas fa-crown"></i></div>
+                    <div class="radio-info"><h4>Kral FM</h4><span>Türkçe Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <div class="radio-card" data-search="kral pop" data-names="kral pop,kralpop,kral pop radyo" data-name="Kral Pop">
                     <div class="radio-icon"><i class="fas fa-crown"></i></div>
                     <div class="radio-info"><h4>Kral Pop</h4><span>Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <div class="radio-card" data-search="radyo 7" data-names="radyo 7,radyo7" data-name="Radyo 7">
+                    <div class="radio-icon"><i class="fas fa-broadcast-tower"></i></div>
+                    <div class="radio-info"><h4>Radyo 7</h4><span>Türkçe Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <div class="radio-card" data-search="pal nostalji" data-names="pal nostalji,palnostalji,pal nostalji fm" data-name="Pal Nostalji">
+                    <div class="radio-icon"><i class="fas fa-record-vinyl"></i></div>
+                    <div class="radio-info"><h4>Pal Nostalji</h4><span>Nostalji</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <div class="radio-card" data-search="trt fm" data-names="trt fm,trtfm" data-name="TRT FM">
+                    <div class="radio-icon"><i class="fas fa-broadcast-tower"></i></div>
+                    <div class="radio-info"><h4>TRT FM</h4><span>Türkçe</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <div class="radio-card" data-search="radyo seymen" data-names="radyo seymen,seymen fm" data-name="Radyo Seymen">
+                    <div class="radio-icon"><i class="fas fa-microphone"></i></div>
+                    <div class="radio-info"><h4>Radyo Seymen</h4><span>Pop</span></div>
+                    <i class="fas fa-play-circle radio-status-icon"></i>
+                </div>
+
+                <div class="radio-card disabled" data-name="Number One Türk" aria-disabled="true">
+                    <span class="coming-soon-badge">Yakında</span>
+                    <div class="radio-icon"><i class="fas fa-1"></i></div>
+                    <div class="radio-info"><h4>Number One Türk</h4><span>Türkçe Pop</span></div>
                     <i class="fas fa-clock radio-status-icon"></i>
                 </div>
             </div>
@@ -948,7 +994,7 @@
             }
         }
 
-        const radioCards = Array.from(document.querySelectorAll('.radio-card[data-stream]'));
+        const radioCards = Array.from(document.querySelectorAll('.radio-card[data-stream], .radio-card[data-search]'));
         const chatMini = document.getElementById('chat-mini');
         const chatToggle = document.getElementById('chat-toggle');
 
@@ -978,14 +1024,56 @@
             updatePlayerToRadio(card.dataset.name, card.dataset.logo);
         }
 
-        function startRadio(card) {
-            const streamUrl = card.dataset.stream;
+        const radioApis = ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info', 'https://fi1.api.radio-browser.info'];
+        const resolvedStreams = {};
+        function foldName(t) { return String(t).toLocaleLowerCase('tr').replace(/[^a-z0-9ğüşıöç]/g, ''); }
+
+        async function resolveStream(card) {
+            const key = card.dataset.search;
+            if (resolvedStreams[key]) return resolvedStreams[key];
+            const names = (card.dataset.names || key).split(',').map(foldName);
+            for (const api of radioApis) {
+                try {
+                    const res = await fetch(api + '/json/stations/search?name=' + encodeURIComponent(key) + '&countrycode=TR&hidebroken=true&order=clickcount&reverse=true&limit=40');
+                    const list = (await res.json()).filter(st => st.lastcheckok === 1 && /^https:/.test(st.url_resolved));
+                    const best = list.find(st => names.includes(foldName(st.name))) || list.find(st => names.some(n => foldName(st.name).includes(n)));
+                    if (best) {
+                        resolvedStreams[key] = { url: best.url_resolved, favicon: /^https:/.test(best.favicon || '') ? best.favicon : '' };
+                        return resolvedStreams[key];
+                    }
+                } catch (e) {}
+            }
+            return null;
+        }
+
+        function setCardLogo(card, url) {
+            const box = card.querySelector('.radio-icon');
+            const img = new Image();
+            img.onload = () => {
+                card.dataset.logo = url;
+                box.innerHTML = '';
+                box.appendChild(img);
+            };
+            img.src = url;
+        }
+
+        async function startRadio(card) {
             if (currentRadioCard) {
                 currentRadioCard.classList.remove('playing');
                 currentRadioCard.querySelector('.radio-status-icon').className = 'fas fa-play-circle radio-status-icon';
             }
             if (hls) { hls.destroy(); hls = null; }
             currentRadioCard = card;
+            radioStatus.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Yayın bulunuyor...';
+            const resolved = card.dataset.stream ? { url: card.dataset.stream, favicon: '' } : await resolveStream(card);
+            if (currentRadioCard !== card) return;
+            const streamUrl = resolved && resolved.url;
+            if (resolved && resolved.favicon && !card.dataset.logo) setCardLogo(card, resolved.favicon);
+            if (!streamUrl) {
+                radioStatus.innerHTML = '<i class="fas fa-exclamation-triangle mr-1 text-red-400"></i> Bu radyonun yayını şu an bulunamadı.';
+                resetPlayerToSoundCloud();
+                return;
+            }
             radioAudio.src = streamUrl;
             radioAudio.play().then(() => markRadioPlaying(card)).catch(() => {
                 if (streamUrl.includes('.m3u8') && Hls.isSupported()) {
@@ -1016,6 +1104,8 @@
         }
 
         radioCards.forEach(card => {
+            if (card.dataset.logo) setCardLogo(card, card.dataset.logo);
+            else if (!card.dataset.stream) resolveStream(card).then(r => { if (r && r.favicon) setCardLogo(card, r.favicon); });
             card.addEventListener('click', e => {
                 e.stopPropagation();
                 if (currentRadioCard === card && !radioAudio.paused) {
@@ -1193,19 +1283,83 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function sendChat() {
-            const text = maskBad(chatInput.value.trim());
-            if (!text || Date.now() - lastSent < 2000) return;
-            if (!chatName) {
-                chatName = maskBad((prompt('Takma adın:') || '').trim().slice(0, 20));
-                if (!chatName) return;
-                localStorage.setItem('chatName', chatName);
+        const auth = firebase.auth();
+        let chatUid = null;
+        let nameVerified = false;
+
+        auth.onAuthStateChanged(user => {
+            nameVerified = false;
+            if (user) chatUid = user.uid;
+            else auth.signInAnonymously();
+        });
+
+        async function claimName(name) {
+            const ref = firebase.database().ref('usernames/' + name.toLowerCase());
+            const snap = await ref.once('value');
+            if (snap.exists()) return snap.val() === chatUid;
+            try {
+                await ref.set(chatUid);
+                return true;
+            } catch (e) {
+                return false;
             }
+        }
+
+        async function ensureName() {
+            if (!chatUid) return false;
+            if (nameVerified && chatName) return true;
+            if (chatName && /^[A-Za-z0-9_-]{3,20}$/.test(chatName) && await claimName(chatName)) {
+                nameVerified = true;
+                return true;
+            }
+            chatName = null;
+            while (true) {
+                const input = prompt('Takma adın (3-20 karakter; harf, rakam, _ ve - kullanılabilir):');
+                if (input === null) return false;
+                const name = input.trim();
+                if (!/^[A-Za-z0-9_-]{3,20}$/.test(name) || maskBad(name) !== name) {
+                    alert('Geçersiz takma ad.');
+                    continue;
+                }
+                if (await claimName(name)) {
+                    chatName = name;
+                    nameVerified = true;
+                    localStorage.setItem('chatName', name);
+                    return true;
+                }
+                alert('Bu takma ad kullanılıyor, başka bir tane seç.');
+            }
+        }
+
+        function adminLogin() {
+            const email = prompt('Admin e-posta:');
+            if (!email) return;
+            const password = prompt('Admin şifre:');
+            if (!password) return;
+            auth.signInWithEmailAndPassword(email.trim(), password)
+                .then(() => alert('Admin girişi yapıldı.'))
+                .catch(() => alert('Giriş başarısız.'));
+        }
+
+        function clearChat() {
+            chatRef.remove()
+                .then(() => { chatBox.innerHTML = ''; })
+                .catch(() => alert('Bu komutu kullanma yetkin yok.'));
+        }
+
+        async function sendChat() {
+            const raw = chatInput.value.trim();
+            if (!raw) return;
+            if (raw === '/admin') { chatInput.value = ''; adminLogin(); return; }
+            if (raw === '/temizle') { chatInput.value = ''; clearChat(); return; }
+            if (Date.now() - lastSent < 2000) return;
+            if (!(await ensureName())) return;
             lastSent = Date.now();
-            chatRef.push({ name: chatName, text: text.slice(0, 200), ts: firebase.database.ServerValue.TIMESTAMP });
+            chatRef.push({ name: chatName, uid: chatUid, text: maskBad(raw).slice(0, 200), ts: firebase.database.ServerValue.TIMESTAMP });
             chatInput.value = '';
         }
 
+        chatRef.on('value', snap => { if (!snap.exists()) chatBox.innerHTML = ''; });
         chatRef.limitToLast(50).on('child_added', snap => addChatMessage(snap.val()));
         document.getElementById('chat-send').addEventListener('click', sendChat);
         chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
